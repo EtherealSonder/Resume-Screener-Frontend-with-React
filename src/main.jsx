@@ -1,11 +1,17 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import { RouterProvider } from "react-router-dom";
-import router from "./routes/router";
-import "./index.css";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import AppRouter from './routes/Router';
+import { AuthProvider } from './context/AuthContext';
+import "@fontsource/dm-sans";
+import './index.css';
 
-ReactDOM.createRoot(document.getElementById("root")).render(
+document.body.className = "overflow-hidden font-sans";
+
+
+ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-        <RouterProvider router={router} />
+        <AuthProvider>
+            <AppRouter />
+        </AuthProvider>
     </React.StrictMode>
 );
