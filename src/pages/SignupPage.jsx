@@ -7,6 +7,7 @@ import FancyContainer from "../components/FancyContainer";
 export default function SignupPage() {
     const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { login } = useAuth();
 
@@ -14,8 +15,10 @@ export default function SignupPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         if (form.password !== form.confirm) {
             setError("Passwords do not match");
+            setLoading(false);
             return;
         }
         try {
@@ -24,7 +27,8 @@ export default function SignupPage() {
             navigate("/dashboard");
         } catch (err) {
             setError(err.response?.data?.error || "Signup failed");
-        }
+            setLoading(false);
+        } 
     };
 
     return (
@@ -38,12 +42,14 @@ export default function SignupPage() {
                         placeholder="Name"
                         onChange={handleChange}
                         className="w-full mb-3 p-2 rounded bg-white/90 border border-gray-300"
+                        disabled={loading}
                     />
                     <input
                         name="email"
                         placeholder="Email"
                         onChange={handleChange}
                         className="w-full mb-3 p-2 rounded bg-white/90 border border-gray-300"
+                        disabled={loading}
                     />
                     <input
                         name="password"
@@ -51,6 +57,7 @@ export default function SignupPage() {
                         placeholder="Password"
                         onChange={handleChange}
                         className="w-full mb-3 p-2 rounded bg-white/90 border border-gray-300"
+                        disabled={loading}
                     />
                     <input
                         name="confirm"
@@ -58,15 +65,27 @@ export default function SignupPage() {
                         placeholder="Confirm Password"
                         onChange={handleChange}
                         className="w-full mb-3 p-2 rounded bg-white/90 border border-gray-300"
+                        disabled={loading}
                     />
-                    <button className="w-full bg-green-600 text-white py-2 rounded-full font-medium hover:bg-green-700 transform hover:scale-105 transition">
-                        Sign Up
-                    </button>
+                    {loading ? (
+                        <div className="lds-default">
+                            {[...Array(12)].map((_, i) => <div key={i}></div>)}
+                        </div>
+                    ) : (
+                        <button
+                            disabled={loading}
+                            className="w-full bg-green-600 text-white py-2 rounded-full font-medium hover:bg-green-700 transform hover:scale-105 transition disabled:opacity-50 disabled:pointer-events-none"
+                        >
+                            Sign Up
+                        </button>
+                    )}
                 </form>
-                <p className="mt-4 text-white">
-                    Already an account?{" "}
-                    <Link to="/login" className="text-blue-200 underline hover:text-white transition">Log in</Link>
-                </p>
+                {!loading && (
+                    <p className="mt-4 text-white">
+                        Already an account?{" "}
+                        <Link to="/login" className="text-blue-200 underline hover:text-white transition">Log in</Link>
+                    </p>
+                )}
             </div>
         </FancyContainer>
     );

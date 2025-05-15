@@ -7,7 +7,6 @@ import './index.css';
 
 document.body.className = "overflow-hidden font-sans";
 
-
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
         <AuthProvider>

@@ -7,6 +7,7 @@ import FancyContainer from "../components/FancyContainer";
 export default function LoginPage() {
     const [form, setForm] = useState({ email: "", password: "", remember: false });
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { login } = useAuth();
 
@@ -17,12 +18,15 @@ export default function LoginPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         try {
             const res = await loginUser(form.email, form.password);
             login(res.data, form.remember);
             navigate("/dashboard");
+            // Do NOT reset loading — we're leaving the page anyway
         } catch (err) {
-            setError(err.response?.data?.error || "Invalid credentials");
+            setError(err.response?.data?.error || "Login failed");
+            setLoading(false); // only reset if login fails
         }
     };
 
@@ -38,6 +42,7 @@ export default function LoginPage() {
                         placeholder="Email"
                         onChange={handleChange}
                         className="w-full mb-3 p-2 rounded bg-white/90 border border-gray-300"
+                        disabled={loading}
                     />
                     <input
                         name="password"
@@ -45,19 +50,31 @@ export default function LoginPage() {
                         placeholder="Password"
                         onChange={handleChange}
                         className="w-full mb-3 p-2 rounded bg-white/90 border border-gray-300"
+                        disabled={loading}
                     />
                     <label className="flex items-center text-white text-sm mb-4">
-                        <input type="checkbox" name="remember" onChange={handleChange} className="mr-2" />
+                        <input type="checkbox" name="remember" onChange={handleChange} className="mr-2" disabled={loading} />
                         Remember me
                     </label>
-                    <button className="w-full bg-blue-600 text-white py-2 rounded-full font-medium hover:bg-blue-700 transform hover:scale-105 transition">
-                        Login
-                    </button>
+                    {loading ? (
+                        <div className="lds-default">
+                            {[...Array(12)].map((_, i) => <div key={i}></div>)}
+                        </div>
+                    ) : (
+                        <button
+                            disabled={loading}
+                            className="w-full bg-blue-600 text-white py-2 rounded-full font-medium hover:bg-blue-700 transform hover:scale-105 transition disabled:opacity-50 disabled:pointer-events-none"
+                        >
+                            Login
+                        </button>
+                    )}
                 </form>
-                <p className="mt-4 text-white">
-                    New user?{" "}
-                    <Link to="/signup" className="text-blue-200 underline hover:text-white transition">Sign up</Link>
-                </p>
+                {!loading && (
+                    <p className="mt-4 text-white">
+                        New user?{" "}
+                        <Link to="/signup" className="text-blue-200 underline hover:text-white transition">Sign up</Link>
+                    </p>
+                )}
             </div>
         </FancyContainer>
     );
