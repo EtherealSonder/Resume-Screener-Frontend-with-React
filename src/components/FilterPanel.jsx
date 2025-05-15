@@ -20,7 +20,7 @@ export default function FilterPanel({ jobTitles = [], onFilterChange }) {
     };
 
     return (
-        <div className="bg-white/20 p-4 rounded-xl shadow flex flex-wrap gap-4 mb-6 text-white">
+        <div className="bg-white/20 p-4 rounded-xl shadow flex flex-wrap gap-4 mb-6 text-black">
             <div>
                 <label className="block text-sm">Job Title</label>
                 <select

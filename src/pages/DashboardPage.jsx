@@ -18,28 +18,29 @@ export default function DashboardPage() {
             .finally(() => setLoading(false));
     }, [user.id]);
 
-    if (loading) return <p className="text-white">Loading dashboard...</p>;
+    if (loading) return <p className="text-black">Loading dashboard...</p>;
 
     return (
-        <div className="p-8 rounded-2xl shadow-xl backdrop-blur-md bg-white/50 text-black animate-fadeIn">
-            <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
-
-            <div className="grid md:grid-cols-2 gap-6">
-                <LineChartCard
-                    title="Daily/Weekly Application Volume"
-                    data={trendData}
-                    xKey="date"
-                    yKey="count"
-                />
-                <LineChartCard
-                    title="Avg. Time Since Application"
-                    data={trendData.map(d => ({
-                        ...d,
-                        daysAgo: Math.round((new Date() - new Date(d.date)) / (1000 * 60 * 60 * 24))
-                    }))}
-                    xKey="date"
-                    yKey="daysAgo"
-                />
+        <div className="bg-blue-50 p-6 rounded-2xl shadow-inner text-black animate-fadeIn">
+            <div className="bg-white p-6 rounded-xl shadow">
+                <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
+                <div className="grid md:grid-cols-2 gap-6">
+                    <LineChartCard
+                        title="Daily/Weekly Application Volume"
+                        data={trendData}
+                        xKey="date"
+                        yKey="count"
+                    />
+                    <LineChartCard
+                        title="Avg. Time Since Application"
+                        data={trendData.map(d => ({
+                            ...d,
+                            daysAgo: Math.round((new Date() - new Date(d.date)) / (1000 * 60 * 60 * 24))
+                        }))}
+                        xKey="date"
+                        yKey="daysAgo"
+                    />
+                </div>
             </div>
         </div>
     );

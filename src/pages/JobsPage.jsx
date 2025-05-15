@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
-
 export default function JobsPage() {
     const { user } = useAuth();
     const [jobs, setJobs] = useState([]);
@@ -15,26 +14,31 @@ export default function JobsPage() {
                     setJobs(data);
                 } else {
                     console.error("Expected array, got:", data);
-                    setJobs([]); // fallback to empty array
+                    setJobs([]);
                 }
             })
             .finally(() => setLoading(false));
     }, [user.id]);
 
-
-    if (loading) return <p className="text-white">Loading jobs...</p>;
+    if (loading) return <p className="text-black">Loading jobs...</p>;
 
     return (
-        <div className="bg-white/10 backdrop-blur-md p-8 rounded-2xl shadow-xl text-white animate-fadeIn">
-            <h1 className="text-3xl font-bold mb-4">Jobs</h1>
-            <ul className="space-y-3">
-                {jobs.map((job, i) => (
-                    <li key={i} className="bg-white/20 text-white p-4 rounded-xl border border-white/10">
-                        <p><strong>Title:</strong> {job.title}</p>
-                        <p><strong>Description:</strong> {job.description}</p>
-                    </li>
-                ))}
-            </ul>
+        <div className="bg-blue-50 p-6 rounded-2xl shadow-inner text-black animate-fadeIn">
+            <div className="bg-white p-6 rounded-xl shadow">
+                <h1 className="text-3xl font-bold mb-4">Jobs</h1>
+                {jobs.length === 0 ? (
+                    <p className="text-gray-600">No jobs available.</p>
+                ) : (
+                    <ul className="space-y-3">
+                        {jobs.map((job, i) => (
+                            <li key={i} className="bg-gray-100 text-black p-4 rounded-xl border border-gray-300">
+                                <p><strong>Title:</strong> {job.title}</p>
+                                <p><strong>Description:</strong> {job.description || "N/A"}</p>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
         </div>
     );
 }

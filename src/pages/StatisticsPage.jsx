@@ -20,7 +20,7 @@ export default function StatisticsPage() {
             const res = await fetch(`http://localhost:5000/statistics?client_id=${user.id}`);
             const statData = await res.json();
             setStats(statData);
-            setFilteredStats(statData); // default
+            setFilteredStats(statData);
             setLoading(false);
         }
 
@@ -47,95 +47,58 @@ export default function StatisticsPage() {
 
         const inRange = (value, max) => !max || value <= max;
 
-        const filteredPlot = stats.scoreExperiencePlot.filter(c =>
+        const filteredPlot = (stats.scoreExperiencePlot || []).filter(c =>
             (!jobTitle || c.job_title === jobTitle) &&
             inRange(c.score, maxScore) &&
             inRange(c.experience, maxExp)
         );
 
         const filteredJobDist = jobTitle
-            ? stats.jobDistribution.filter(j => j.title === jobTitle)
-            : stats.jobDistribution;
+            ? (stats.jobDistribution || []).filter(j => j.title === jobTitle)
+            : (stats.jobDistribution || []);
 
         const filteredStats = {
             ...stats,
             scoreExperiencePlot: filteredPlot,
             jobDistribution: filteredJobDist,
-            // You can apply similar filters for other charts if needed
+            authenticityPie: stats.authenticityPie || [],
+            educationPie: stats.educationPie || [],
         };
 
         setFilteredStats(filteredStats);
     };
 
-    if (loading) return <p className="text-white">Loading statistics...</p>;
+    if (loading) return <p className="text-black">Loading statistics...</p>;
     if (!filteredStats) return <p className="text-red-500">No data available.</p>;
 
     return (
-        <div className="bg-white/10 backdrop-blur-md p-8 rounded-2xl shadow-xl text-white animate-fadeIn space-y-10">
-            <h1 className="text-3xl font-bold">Statistics</h1>
+        <div className="bg-blue-50 p-6 rounded-2xl shadow-inner text-black animate-fadeIn space-y-10">
+            <h1 className="text-3xl font-bold text-black">Statistics</h1>
 
             <FilterPanel jobTitles={jobTitles} onFilterChange={handleFilterChange} />
 
-            <section>
-                <h2 className="text-xl font-semibold mb-3">Core Candidate Metrics</h2>
+            <section className="bg-white p-6 rounded-xl shadow">
+                <h2 className="text-xl font-semibold mb-3 text-black">Core Candidate Metrics</h2>
                 <div className="grid md:grid-cols-2 gap-6">
-                    <BarChartCard
-                        title="Experience Distribution"
-                        data={filteredStats.experienceDistribution}
-                        xKey="range"
-                        yKey="count"
-                    />
-                    <BarChartCard
-                        title="Skill Match Rate"
-                        data={filteredStats.skillMatchBuckets}
-                        xKey="range"
-                        yKey="count"
-                    />
-                    <BarChartCard
-                        title="Score Distribution"
-                        data={filteredStats.scoreBuckets}
-                        xKey="range"
-                        yKey="count"
-                    />
+                    <BarChartCard title="Experience Distribution" data={filteredStats.experienceDistribution} xKey="range" yKey="count" />
+                    <BarChartCard title="Skill Match Rate" data={filteredStats.skillMatchBuckets} xKey="range" yKey="count" />
+                    <BarChartCard title="Score Distribution" data={filteredStats.scoreBuckets} xKey="range" yKey="count" />
                     <div ref={jobChartRef}>
-                        <BarChartCard
-                            title="Job Volume by Title"
-                            data={filteredStats.jobDistribution}
-                            xKey="title"
-                            yKey="count"
-                        />
+                        <BarChartCard title="Job Volume by Title" data={filteredStats.jobDistribution} xKey="title" yKey="count" />
                     </div>
-                    <ExportButtons
-                        data={filteredStats.jobDistribution}
-                        fileName="JobVolumeByTitle"
-                        targetRef={jobChartRef}
-                    />
+                    <ExportButtons data={filteredStats.jobDistribution} fileName="JobVolumeByTitle" targetRef={jobChartRef} />
                 </div>
             </section>
 
-            <section>
-                <h2 className="text-xl font-semibold mb-3">Filtering & Comparison</h2>
+            <section className="bg-white p-6 rounded-xl shadow">
+                <h2 className="text-xl font-semibold mb-3 text-black">Filtering & Comparison</h2>
                 <div className="grid md:grid-cols-2 gap-6">
-                    <ScatterChartCard
-                        title="Score vs. Experience"
-                        data={filteredStats.scoreExperiencePlot}
-                        xKey="experience"
-                        yKey="score"
-                    />
-                    <PieChartCard
-                        title="Cover Letter Authenticity"
-                        data={filteredStats.authenticityPie}
-                        nameKey="label"
-                        valueKey="value"
-                    />
-                    <PieChartCard
-                        title="Education Breakdown"
-                        data={filteredStats.educationPie}
-                        nameKey="level"
-                        valueKey="count"
-                    />
+                    <ScatterChartCard title="Score vs. Experience" data={filteredStats.scoreExperiencePlot} xKey="experience" yKey="score" />
+                    <PieChartCard title="Cover Letter Authenticity" data={filteredStats.authenticityPie || []} nameKey="label" valueKey="value" />
+                    <PieChartCard title="Education Breakdown" data={filteredStats.educationPie || []} nameKey="level" valueKey="count" />
                 </div>
             </section>
         </div>
     );
+
 }

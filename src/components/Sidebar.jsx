@@ -3,7 +3,7 @@ import { FaHome, FaUser, FaBriefcase, FaChartPie, FaCog } from "react-icons/fa";
 
 export default function Sidebar() {
     return (
-        <div className="w-64 h-full bg-white/60 backdrop-blur-md text-black shadow-xl p-6 flex flex-col justify-between">
+        <div className="w-64 h-full bg-white/10 backdrop-blur-md text-black shadow-xl p-6 flex flex-col justify-between">
             <div className="space-y-8">
                 <nav className="flex flex-col gap-4 text-lg">
                     <NavLink
