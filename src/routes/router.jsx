@@ -22,6 +22,8 @@ import JobsMyWrapper from "../pages/jobs/JobsMyWrapper";
 
 import JobsCreate from "../pages/jobs/JobsCreate";
 
+import ApplyPage from "../pages/ApplyPage";
+
 const router = createBrowserRouter(
     createRoutesFromElements(
         <>
@@ -29,6 +31,7 @@ const router = createBrowserRouter(
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
+            <Route path="/apply/:job_id" element={<ApplyPage />} />
 
             {/* Protected Routes */}
             <Route

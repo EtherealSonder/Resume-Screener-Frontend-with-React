@@ -10,4 +10,12 @@ export const loginUser = (email, password) =>
 export const signupUser = (name, email, password) =>
     api.post("/signup", { name, email, password });
 
+export const updateJob = (jobId, updatedJob) =>
+    api.patch(`/jobs/${jobId}`, updatedJob);
+
+export const deleteJob = (jobId) =>
+    api.delete(`/jobs/${jobId}`);
+
+export const getJobById = (jobId) => api.get(`/jobs/${jobId}`);
+
 export default api;
