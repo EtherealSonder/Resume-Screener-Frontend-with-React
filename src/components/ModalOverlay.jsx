@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaEdit, FaTimes, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTimes, FaTrash, FaCalendarAlt, FaUsers, FaExternalLinkAlt } from "react-icons/fa";
 import { updateJob, deleteJob } from "../services/api";
 import ModalPortal from "./ModalPortal";
 
@@ -48,7 +48,7 @@ export default function ModalOverlay({ job, onClose, refreshJobs }) {
             refreshJobs();
             setIsEditing(false);
             handleClose();
-            showToast(`\"${title}\" edited successfully`, "green");
+            showToast(`"${title}" edited successfully`, "green");
         } catch (err) {
             console.error("Update failed:", err);
             alert("Update failed. See console.");
@@ -93,34 +93,21 @@ export default function ModalOverlay({ job, onClose, refreshJobs }) {
                 {/* Modal */}
                 <div className="fixed inset-0 z-[1010] flex items-center justify-center p-4">
                     <div
-                        className={`bg-white text-black rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden relative ${isClosing ? "animate-fade-out-scale" : "animate-fade-scale"
-                            }`}
+                        className={`bg-white text-black rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden relative ${isClosing ? "animate-fade-out-scale" : "animate-fade-scale"}`}
                     >
                         {/* Top Actions */}
                         <div className="absolute right-4 top-4 flex gap-3">
                             {!isEditing && (
                                 <>
-                                    <button
-                                        onClick={() => setIsEditing(true)}
-                                        className="text-gray-500 hover:text-blue-600"
-                                        disabled={isLoading}
-                                    >
+                                    <button onClick={() => setIsEditing(true)} className="text-gray-500 hover:text-blue-600" disabled={isLoading}>
                                         <FaEdit />
                                     </button>
-                                    <button
-                                        onClick={() => setShowDeleteConfirm(true)}
-                                        className="text-gray-500 hover:text-red-600"
-                                        disabled={isLoading}
-                                    >
+                                    <button onClick={() => setShowDeleteConfirm(true)} className="text-gray-500 hover:text-red-600" disabled={isLoading}>
                                         <FaTrash />
                                     </button>
                                 </>
                             )}
-                            <button
-                                onClick={handleClose}
-                                className="text-gray-500 hover:text-red-600"
-                                disabled={isLoading}
-                            >
+                            <button onClick={handleClose} className="text-gray-500 hover:text-red-600" disabled={isLoading}>
                                 <FaTimes />
                             </button>
                         </div>
@@ -144,16 +131,41 @@ export default function ModalOverlay({ job, onClose, refreshJobs }) {
                                 </>
                             ) : (
                                 <>
-                                    <h2 className="text-2xl font-bold">{title}</h2>
-                                    <p className="whitespace-pre-wrap mt-4">{description}</p>
-                                        <a
-                                            href={`${frontendUrl}/apply/${job.id}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="block text-center text-blue-600 underline"
-                                        >
-                                            View Application Form
-                                        </a>
+                                    {/* Job Title */}
+                                    <h2 className="text-2xl font-bold text-gray-800 mb-3">{title}</h2>
+
+                                    {/* Created / Applicants */}
+                                    <div className="flex flex-wrap gap-6 items-center mb-5 text-sm text-gray-600">
+                                        {job.created_at && (
+                                            <div className="flex items-center gap-2">
+                                                <FaCalendarAlt className="text-blue-500" />
+                                                <span>Created on {new Date(job.created_at).toLocaleDateString()}</span>
+                                            </div>
+                                        )}
+                                        <div className="flex items-center gap-2">
+                                            <FaUsers className="text-green-600" />
+                                            <span>{job.applicantCount ?? 0} Applicants</span>
+                                        </div>
+                                    </div>
+
+                                    {/* Description */}
+                                    <div className="mb-6">
+                                        <h3 className="text-base font-bold mb-2 text-gray-700">Job Description</h3>
+                                        <p className="whitespace-pre-wrap text-gray-800 leading-relaxed">
+                                            {description}
+                                        </p>
+                                    </div>
+
+                                    {/* Application Link */}
+                                    <a
+                                        href={`${frontendUrl}/apply/${job.id}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-2 text-sm bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium transition"
+                                    >
+                                        <FaExternalLinkAlt />
+                                        View Application Form
+                                    </a>
                                 </>
                             )}
                         </div>
@@ -220,8 +232,7 @@ export default function ModalOverlay({ job, onClose, refreshJobs }) {
                 {/* Toast Message */}
                 {toast && (
                     <div
-                        className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 px-6 py-3 text-white rounded-xl shadow-xl animate-slide-in z-[2000] ${toast.color === "green" ? "bg-green-600" : "bg-red-600"
-                            }`}
+                        className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 px-6 py-3 text-white rounded-xl shadow-xl animate-slide-in z-[2000] ${toast.color === "green" ? "bg-green-600" : "bg-red-600"}`}
                     >
                         {toast.message}
                     </div>

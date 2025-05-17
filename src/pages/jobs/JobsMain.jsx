@@ -8,7 +8,7 @@ export default function JobsMain() {
         <div className="flex justify-center items-center h-full gap-12 animate-fadeIn">
             <div
                 onClick={() => navigate("/dashboard/jobs/my")}
-                className="bg-white text-black hover:bg-blue-100 hover:scale-105 transform transition-all duration-300 w-64 h-64 rounded-3xl shadow-xl flex flex-col items-center justify-center gap-4 text-xl font-semibold cursor-pointer"
+                className="bg-white hover:bg-blue-50 border border-gray-200 hover:border-blue-300 transition p-5 rounded-2xl shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center justify-center w-64 h-64 text-xl font-semibold gap-4"
             >
                 <FaBriefcase size={48} />
                 My Jobs
@@ -16,7 +16,7 @@ export default function JobsMain() {
 
             <div
                 onClick={() => navigate("/dashboard/jobs/create")}
-                className="bg-white text-black hover:bg-blue-100 hover:scale-105 transform transition-all duration-300 w-64 h-64 rounded-3xl shadow-xl flex flex-col items-center justify-center gap-4 text-xl font-semibold cursor-pointer"
+                className="bg-white hover:bg-blue-50 border border-gray-200 hover:border-blue-300 transition p-5 rounded-2xl shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center justify-center w-64 h-64 text-xl font-semibold gap-4"
             >
                 <FaPlus size={48} />
                 Create Job

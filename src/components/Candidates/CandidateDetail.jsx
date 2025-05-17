@@ -12,7 +12,7 @@ import SummaryCard from "./SummaryCard";
 import TwoColumnBox from "./TwoColumnBox";
 import TagList from "./TagList";
 import ModalPortal from "../ModalPortal";
-
+import CoverLetterAnalysis from "./CoverLetterAnalysis";
 function parseTags(raw) {
     if (!raw) return [];
 
@@ -132,14 +132,22 @@ export default function CandidateDetail({ candidate, onClose }) {
                     />
 
                     {/* Cover Letter Analysis */}
-                    <div className="mt-6 mb-4">
-                        <h4 className="text-base font-bold text-gray-700 mb-2">
-                            Cover Letter Authenticity
-                        </h4>
-                        <p className="bg-gray-100 border border-gray-300 text-sm text-gray-800 p-4 rounded">
-                            {candidate.cover_letter_report}
-                        </p>
-                    </div>
+                    <hr className="my-6" />
+
+                    <CoverLetterAnalysis
+                        report={
+                            candidate.cover_letter_analysis || {
+                                analysis: "No cover letter provided.",
+                                issues: [],
+                                recommendation: "Cover letter missing — request one from candidate.",
+                            }
+                        }
+                        score={
+                            typeof candidate.ai_writing_score === "number"
+                                ? candidate.ai_writing_score
+                                : 0
+                        }
+                    />
 
                     {/* Footer Buttons */}
                     <div className="mt-8 flex flex-wrap gap-4 justify-end">
