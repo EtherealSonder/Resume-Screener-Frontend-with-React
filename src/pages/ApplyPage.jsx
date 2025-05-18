@@ -15,13 +15,11 @@ export default function ApplyPage() {
     const [loading, setLoading] = useState(false);
     const [jobTitle, setJobTitle] = useState("");
 
-    // ✅ Fetch job title using /jobs/:id
     useEffect(() => {
         async function fetchJobTitle() {
             try {
                 const res = await api.get(`/jobs/${job_id}`);
-                console.log("Fetched job data:", res.data); 
-                setJobTitle(res.data.job_title || res.data.title || ""); // or res.data.title depending on your backend
+                setJobTitle(res.data.job_title || res.data.title || "");
             } catch (err) {
                 console.error("Failed to fetch job title:", err);
             }
@@ -69,59 +67,56 @@ export default function ApplyPage() {
                 {jobTitle ? `Apply for Job – "${jobTitle}"` : "Loading..."}
             </h2>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Full Name"
-                    className="w-full border px-3 py-2 rounded"
-                    onChange={handleChange}
-                />
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    className="w-full border px-3 py-2 rounded"
-                    onChange={handleChange}
-                />
-                <input
-                    type="tel"
-                    name="phone"
-                    placeholder="Phone"
-                    className="w-full border px-3 py-2 rounded"
-                    onChange={handleChange}
-                />
-                <input
-                    type="file"
-                    name="resume"
-                    accept=".pdf"
-                    className="w-full"
-                    onChange={handleChange}
-                    required
-                />
-                <textarea
-                    name="coverLetter"
-                    rows={4}
-                    placeholder="Cover Letter (optional)"
-                    className="w-full border px-3 py-2 rounded"
-                    onChange={handleChange}
-                />
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                >
-                    {loading ? "Submitting..." : "Submit Application"}
-                </button>
-            </form>
-
-            {response && (
-                <div className="mt-6 border-t pt-4">
-                    <h3 className="text-lg font-semibold mb-2">Parsed Result:</h3>
-                    <pre className="bg-gray-100 p-3 rounded text-sm overflow-auto max-h-[80vh] whitespace-pre-wrap">
-                        {JSON.stringify(response, null, 2)}
-                    </pre>
+            {response ? (
+                <div className="bg-green-100 text-green-800 px-4 py-3 rounded border border-green-300">
+                    ✅ Job Application for "<strong>{jobTitle}</strong>" submitted successfully.
                 </div>
+            ) : (
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <input
+                        type="text"
+                        name="name"
+                        placeholder="Full Name"
+                        className="w-full border px-3 py-2 rounded"
+                        onChange={handleChange}
+                    />
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        className="w-full border px-3 py-2 rounded"
+                        onChange={handleChange}
+                    />
+                    <input
+                        type="tel"
+                        name="phone"
+                        placeholder="Phone"
+                        className="w-full border px-3 py-2 rounded"
+                        onChange={handleChange}
+                    />
+                    <input
+                        type="file"
+                        name="resume"
+                        accept=".pdf"
+                        className="w-full"
+                        onChange={handleChange}
+                        required
+                    />
+                    <textarea
+                        name="coverLetter"
+                        rows={4}
+                        placeholder="Cover Letter (optional)"
+                        className="w-full border px-3 py-2 rounded"
+                        onChange={handleChange}
+                    />
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                    >
+                        {loading ? "Submitting..." : "Submit Application"}
+                    </button>
+                </form>
             )}
         </div>
     );

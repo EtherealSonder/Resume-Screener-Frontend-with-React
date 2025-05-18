@@ -10,8 +10,8 @@ export default function CoverLetterAnalysis({ report, score }) {
     if (!report || typeof report !== "object") return null;
 
     return (
-        <div className="mb-6">
-            <h4 className="text-base font-bold text-gray-700 mb-2">Cover Letter Authenticity</h4>
+        <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+            <h4 className="text-lg font-bold text-gray-800 mb-4">Cover Letter Analysis</h4>
 
             {/* Analysis */}
             <div className="mb-4">
