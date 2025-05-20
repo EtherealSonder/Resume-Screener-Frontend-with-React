@@ -48,7 +48,7 @@ export default function Sidebar() {
                         }
                     >
                         <FaChartPie />
-                        Statistics
+                        Analytics
                     </NavLink>
                 </nav>
             </div>

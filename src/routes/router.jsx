@@ -12,7 +12,7 @@ import Layout from "../components/Layout";
 import DashboardPage from "../pages/DashboardPage";
 import CandidatesPage from "../pages/CandidatesPage";
 import SettingsPage from "../pages/SettingsPage";
-import StatisticsPage from "../pages/StatisticsPage";
+import AnalyticsPage from "../pages/AnalyticsPage";
 import ProtectedRoute from "../components/ProtectedRoute";
 
 // Job Pages
@@ -44,7 +44,7 @@ const router = createBrowserRouter(
             >
                 <Route index element={<DashboardPage />} />
                 <Route path="candidates" element={<CandidatesPage />} />
-                <Route path="statistics" element={<StatisticsPage />} />
+                <Route path="statistics" element={<AnalyticsPage />} />
                 <Route path="settings" element={<SettingsPage />} />
 
                 {/* Job Subpages */}
