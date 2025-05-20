@@ -18,4 +18,9 @@ export const deleteJob = (jobId) =>
 
 export const getJobById = (jobId) => api.get(`/jobs/${jobId}`);
 
+export const getScoreDistributions = (jobTitles) =>
+    api.get("/statistics/distributions", {
+        params: { job_titles: jobTitles }
+    });
+
 export default api;

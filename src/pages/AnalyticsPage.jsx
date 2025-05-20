@@ -7,6 +7,7 @@ import MostAppliedJobsTable from "../components/Tables/MostAppliedJobsTable";
 import ApplicationsTimelineChart from "../components/charts/ApplicationsTimelineChart";
 import JobFilterDropdown from "../components/JobFilterDropdown";
 import CandidateDetail from "../components/candidates/CandidateDetail";
+import ScoreQualityDistributions from "../components/ScoreQualityDistributions";
 import { useAuth } from "../context/AuthContext";
 import api from "../services/api";
 
@@ -133,9 +134,8 @@ export default function AnalyticsPage() {
                 </div>
             </AccordionPanel>
 
-            {/* ➤ Placeholder Panels */}
             <AccordionPanel title="Score & Quality Distributions" icon={<FaBrain className="text-pink-600" />}>
-                <p className="italic text-gray-600">Charts like score buckets, experience histograms, education pies.</p>
+                <ScoreQualityDistributions jobTitles={jobs} />
             </AccordionPanel>
 
             <AccordionPanel title="Skill Insights" icon={<FaTools className="text-amber-700" />}>

@@ -1,8 +1,21 @@
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import {
+    PieChart,
+    Pie,
+    Cell,
+    Tooltip,
+    ResponsiveContainer,
+    Legend
+} from "recharts";
 
-const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#a0e9ff", "#ff6699"];
+const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#a0e9ff", "#ff6699", "#6366f1", "#14b8a6"];
 
-export default function PieChartCard({ title, data = [], nameKey = "label", valueKey = "value" }) {
+export default function PieChartCard({
+    title,
+    data = [],
+    nameKey = "label",
+    valueKey = "value",
+    showLegend = false
+}) {
     if (!Array.isArray(data) || data.length === 0) {
         return (
             <div className="bg-white/20 backdrop-blur-md p-6 rounded-xl shadow-md mb-6 text-white">
@@ -26,7 +39,7 @@ export default function PieChartCard({ title, data = [], nameKey = "label", valu
                         outerRadius={100}
                         label
                     >
-                        {data.map((entry, index) => (
+                        {data.map((_, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                     </Pie>
@@ -35,6 +48,7 @@ export default function PieChartCard({ title, data = [], nameKey = "label", valu
                         labelStyle={{ color: "white" }}
                         itemStyle={{ color: "white" }}
                     />
+                    {showLegend && <Legend />}
                 </PieChart>
             </ResponsiveContainer>
         </div>
