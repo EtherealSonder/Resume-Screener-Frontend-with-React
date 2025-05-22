@@ -23,4 +23,34 @@ export const getScoreDistributions = (jobTitles) =>
         params: { job_titles: jobTitles }
     });
 
+export const getSkillInsights = (clientId, jobTitles) =>
+    api.get("/statistics/skills", {
+        params: { client_id: clientId, job_titles: jobTitles }
+    });
+
+export const getSkillBubbleData = (clientId, type) =>
+    api.get("/statistics/skills/bubble", {
+        params: { client_id: clientId, type }
+    });
+
+export const getSkillGridData = (clientId, type) =>
+    api.get("/statistics/skills/grid", {
+        params: { client_id: clientId, type }
+    });
+
+export const getCandidates = (clientId) =>
+    api.get("/candidates", {
+        params: { client_id: clientId }
+    });
+
+export const getGroupedBarData = (clientId, type) =>
+    api.get("/statistics/skills/grouped_bar", {
+        params: { client_id: clientId, type }
+    });
+
+export const getRadarData = (clientId, type, jobTitles) =>
+    api.get("/statistics/skills/radar", {
+        params: { client_id: clientId, type, job_titles: jobTitles }
+    });
+
 export default api;

@@ -4,6 +4,7 @@ import PieChartCard from "../components/charts/PieChartCard";
 import LoadingSpinner from "../components/candidates/LoadingSpinner";
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
+import { FaSlidersH, FaUserClock, FaGraduationCap } from "react-icons/fa";
 
 export default function ScoreQualityDistributions({ jobTitles }) {
     const { user } = useAuth();
@@ -95,17 +96,30 @@ export default function ScoreQualityDistributions({ jobTitles }) {
 
             {/* Tab switcher */}
             <div className="flex gap-4 mb-4">
-                {["score", "experience", "education"].map(v => (
-                    <button
-                        key={v}
-                        onClick={() => setView(v)}
-                        className={`px-4 py-2 text-sm rounded-md border ${view === v ? "bg-pink-600 text-white" : "bg-white text-gray-700 border-gray-300"}`}
-                    >
-                        {v === "score" && "Score Buckets"}
-                        {v === "experience" && "Experience Histogram"}
-                        {v === "education" && "Education Levels"}
-                    </button>
-                ))}
+                <button
+                    onClick={() => setView("score")}
+                    className={`flex items-center gap-2 px-4 py-2 text-sm rounded-md border ${view === "score" ? "bg-pink-600 text-white" : "bg-white text-gray-700 border-gray-300"
+                        }`}
+                >
+                    <FaSlidersH />
+                    Score Buckets
+                </button>
+                <button
+                    onClick={() => setView("experience")}
+                    className={`flex items-center gap-2 px-4 py-2 text-sm rounded-md border ${view === "experience" ? "bg-pink-600 text-white" : "bg-white text-gray-700 border-gray-300"
+                        }`}
+                >
+                    <FaUserClock />
+                    Experience Histogram
+                </button>
+                <button
+                    onClick={() => setView("education")}
+                    className={`flex items-center gap-2 px-4 py-2 text-sm rounded-md border ${view === "education" ? "bg-pink-600 text-white" : "bg-white text-gray-700 border-gray-300"
+                        }`}
+                >
+                    <FaGraduationCap />
+                    Education Levels
+                </button>
             </div>
 
             {loading ? (

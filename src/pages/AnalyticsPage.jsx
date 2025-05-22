@@ -8,6 +8,7 @@ import ApplicationsTimelineChart from "../components/charts/ApplicationsTimeline
 import JobFilterDropdown from "../components/JobFilterDropdown";
 import CandidateDetail from "../components/candidates/CandidateDetail";
 import ScoreQualityDistributions from "../components/ScoreQualityDistributions";
+import SkillInsights from "../components/charts/SkillInsights";
 import { useAuth } from "../context/AuthContext";
 import api from "../services/api";
 
@@ -140,6 +141,7 @@ export default function AnalyticsPage() {
 
             <AccordionPanel title="Skill Insights" icon={<FaTools className="text-amber-700" />}>
                 <p className="italic text-gray-600">Heatmaps for top technical and soft skills by job title.</p>
+                <SkillInsights jobTitles={jobs} />
             </AccordionPanel>
 
             <AccordionPanel title="Resume & Authorship Integrity" icon={<FaFileAlt className="text-gray-800" />}>
