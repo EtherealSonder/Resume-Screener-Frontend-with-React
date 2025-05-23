@@ -6,7 +6,7 @@ export default function AccordionPanel({ title, icon, children }) {
     const [open, setOpen] = useState(false);
 
     return (
-        <div className="bg-white/30 backdrop-blur-md mb-6 rounded-xl shadow overflow-hidden">
+        <div className="bg-graylupa-surface mb-6 rounded-xl shadow border border-graylupa-border text-graylupa-text">
             <div
                 onClick={() => setOpen(!open)}
                 className="cursor-pointer flex items-center justify-between p-4 border-b border-black/10 text-black"

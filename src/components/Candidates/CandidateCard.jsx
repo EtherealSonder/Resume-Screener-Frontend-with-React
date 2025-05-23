@@ -4,11 +4,12 @@ import { FaUserCircle } from "react-icons/fa";
 export default function CandidateCard({ candidate, onClick }) {
     return (
         <div
-            className="bg-white hover:bg-blue-50 border border-gray-200 hover:border-blue-300 transition p-5 rounded-2xl shadow-sm hover:shadow-md cursor-pointer flex flex-col gap-2"
+            className="bg-graylupa-surface hover:bg-gray-100 border border-graylupa-border transition p-5 rounded-2xl shadow-sm hover:shadow-md cursor-pointer flex flex-col gap-2"
+
             onClick={onClick}
         >
             <div className="flex items-center gap-3">
-                <FaUserCircle className="text-3xl text-blue-500" />
+                <FaUserCircle className="text-3xl text-gray-500" />
                 <div>
                     <h2 className="text-lg font-semibold text-gray-800">{candidate.name}</h2>
                     <p className="text-sm text-gray-500">{candidate.email}</p>

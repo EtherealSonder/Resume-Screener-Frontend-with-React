@@ -14,7 +14,7 @@ import CandidatesPage from "../pages/CandidatesPage";
 import SettingsPage from "../pages/SettingsPage";
 import AnalyticsPage from "../pages/AnalyticsPage";
 import ProtectedRoute from "../components/ProtectedRoute";
-
+import AskLupiq from "../pages/AskLupiq"; 
 // Job Pages
 import JobsMain from "../pages/jobs/JobsMain";
 import JobsMy from "../pages/jobs/JobsMy";
@@ -45,6 +45,7 @@ const router = createBrowserRouter(
                 <Route index element={<DashboardPage />} />
                 <Route path="candidates" element={<CandidatesPage />} />
                 <Route path="statistics" element={<AnalyticsPage />} />
+                <Route path="asklupiq" element={<AskLupiq />} />
                 <Route path="settings" element={<SettingsPage />} />
 
                 {/* Job Subpages */}

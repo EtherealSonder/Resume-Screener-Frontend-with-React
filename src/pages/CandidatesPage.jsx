@@ -67,8 +67,9 @@ export default function CandidatesPage() {
     if (loading) return <LoadingSpinner />;
 
     return (
-        <div className="bg-blue-50 p-6 rounded-2xl shadow-inner text-black animate-fadeIn">
-            <div className="rounded-2xl bg-white/30 border border-white/10 shadow-xl backdrop-blur-md p-6 transition-all duration-300">
+        <div className="bg-graylupa-bg p-6 rounded-2xl text-graylupa-text animate-fadeIn">
+            <div className="rounded-2xl bg-graylupa-surface border border-graylupa-border shadow p-6 transition-all duration-300">
+
 
                 <h1 className="text-3xl font-bold mb-4">Candidates</h1>
 

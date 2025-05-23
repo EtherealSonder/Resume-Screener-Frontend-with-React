@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    --graylupa-bg: #f5f6f8;
+    --graylupa-surface: #ffffff;
+    --graylupa-border: #d1d5db;
+    --graylupa-text: #1f2937;
+    --graylupa-muted: #6b7280;
+    --graylupa-accent: #4b5563;
+    --graylupa-primary: #374151;
+    --graylupa-highlight: #10b981;
+    --graylupa-warning: #f59e0b;
+    --graylupa-error: #ef4444;
+}
+
+
 html, body {
     height: 100%;
     overflow: hidden; /* Prevent scroll behind modals */

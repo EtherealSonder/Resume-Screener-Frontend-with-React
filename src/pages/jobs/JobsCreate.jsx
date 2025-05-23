@@ -3,6 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import api from "../../services/api";
 import CreateSuccessModal from "../../components/CreateSuccessModal";
 import { useNavigate } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa";
 
 export default function JobsCreate() {
     const [title, setTitle] = useState("");
@@ -16,10 +17,10 @@ export default function JobsCreate() {
     const { user } = useAuth();
     const navigate = useNavigate();
 
-    // Fetch all existing jobs for this user
     useEffect(() => {
         if (user?.id) {
-            api.get(`/jobs?client_id=${user.id}`)
+            api
+                .get(`/jobs?client_id=${user.id}`)
                 .then((res) => setExistingJobs(res.data || []))
                 .catch((err) => console.error("Failed to fetch jobs", err));
         }
@@ -28,9 +29,9 @@ export default function JobsCreate() {
     const handleSubmit = async () => {
         if (!title || !description) return;
 
-        // Check for duplicate title
         const titleExists = existingJobs.some(
-            (job) => job.title.trim().toLowerCase() === title.trim().toLowerCase()
+            (job) =>
+                job.title.trim().toLowerCase() === title.trim().toLowerCase()
         );
 
         if (titleExists) {
@@ -47,7 +48,7 @@ export default function JobsCreate() {
             });
             setCreatedJobId(res.data.job_id);
             setShowSuccessModal(true);
-            setErrorMessage(null); // Clear any previous error
+            setErrorMessage(null);
         } catch (err) {
             alert("Failed to create job.");
             console.error(err);
@@ -64,33 +65,38 @@ export default function JobsCreate() {
     };
 
     return (
-        <div className="min-h-screen bg-white/10 backdrop-blur-md p-10 text-black relative flex items-center justify-center">
-            <div className="max-w-xl w-full animate-fadeIn">
-                {/* Header with back button */}
-                <div className="flex items-center gap-3 mb-6">
+        <div className="min-h-screen bg-graylupa-bg px-6 py-12 text-graylupa-text animate-fadeIn">
+            <div className="max-w-2xl mx-auto bg-graylupa-surface border border-graylupa-border rounded-2xl shadow-xl p-8">
+                {/* Header */}
+                <div className="flex justify-between items-center mb-4">
+                    <h1 className="text-3xl font-bold">Create New Job</h1>
                     <button
                         onClick={() => navigate("/dashboard/jobs")}
-                        className="text-black hover:text-blue-600 text-2xl font-medium"
+                        className="text-sm px-4 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100 flex items-center gap-2"
                     >
-                        ←
+                        <FaArrowLeft />
+                        Back
                     </button>
-                    <h2 className="text-2xl font-bold">Create New Job</h2>
                 </div>
+                <p className="text-graylupa-muted mb-6">
+                    Add a new job posting with a clear title and description.
+                </p>
 
                 {/* Form */}
                 <input
-                    className="w-full px-4 py-2 mb-4 border rounded text-black"
+                    className="w-full px-4 py-2 mb-4 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-300"
                     placeholder="Job Title"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                 />
                 <textarea
-                    className="w-full px-4 py-4 mb-4 border rounded h-64 text-black"
+                    className="w-full px-4 py-3 mb-4 border border-gray-300 rounded shadow-sm h-40 focus:outline-none focus:ring-2 focus:ring-gray-300"
                     placeholder="Job Description"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                 />
 
+                {/* Actions */}
                 {loading ? (
                     <div className="flex justify-center my-4">
                         <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
@@ -99,7 +105,7 @@ export default function JobsCreate() {
                     <div className="flex flex-col gap-4">
                         <button
                             onClick={handleSubmit}
-                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md shadow-sm transition"
                         >
                             Create
                         </button>

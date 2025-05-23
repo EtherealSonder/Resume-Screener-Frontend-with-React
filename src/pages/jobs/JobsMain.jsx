@@ -6,20 +6,26 @@ export default function JobsMain() {
 
     return (
         <div className="flex justify-center items-center h-full gap-12 animate-fadeIn">
+            {/* My Jobs */}
             <div
                 onClick={() => navigate("/dashboard/jobs/my")}
-                className="bg-white hover:bg-blue-50 border border-gray-200 hover:border-blue-300 transition p-5 rounded-2xl shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center justify-center w-64 h-64 text-xl font-semibold gap-4"
+                className="bg-graylupa-surface hover:bg-gray-100 border border-graylupa-border transition-all duration-200 p-6 rounded-2xl shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center justify-center w-64 h-64 text-xl font-semibold gap-4"
             >
-                <FaBriefcase size={48} />
-                My Jobs
+                <div className="bg-gray-700 text-white p-4 rounded-full">
+                    <FaBriefcase size={32} />
+                </div>
+                <span className="text-graylupa-text">My Jobs</span>
             </div>
 
+            {/* Create Job */}
             <div
                 onClick={() => navigate("/dashboard/jobs/create")}
-                className="bg-white hover:bg-blue-50 border border-gray-200 hover:border-blue-300 transition p-5 rounded-2xl shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center justify-center w-64 h-64 text-xl font-semibold gap-4"
+                className="bg-graylupa-surface hover:bg-gray-100 border border-graylupa-border transition-all duration-200 p-6 rounded-2xl shadow-sm hover:shadow-md cursor-pointer flex flex-col items-center justify-center w-64 h-64 text-xl font-semibold gap-4"
             >
-                <FaPlus size={48} />
-                Create Job
+                <div className="bg-gray-700 text-white p-4 rounded-full">
+                    <FaPlus size={32} />
+                </div>
+                <span className="text-graylupa-text">Create Job</span>
             </div>
         </div>
     );
