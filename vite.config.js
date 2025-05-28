@@ -1,7 +1,15 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
-})
+    plugins: [react()],
+    server: {
+        proxy: {
+            '/analytics': 'http://localhost:5000',
+            '/candidates': 'http://localhost:5000',
+            '/statistics': 'http://localhost:5000',
+            '/jobs': 'http://localhost:5000',
+            // Add other backend endpoints as needed
+        },
+    },
+});

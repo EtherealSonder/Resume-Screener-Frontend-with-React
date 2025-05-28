@@ -1,12 +1,18 @@
-﻿// 📄 src/components/AccordionPanel.jsx
-import { useState } from "react";
+﻿import { useState, useEffect } from "react";
 import { FaChevronDown } from "react-icons/fa";
 
-export default function AccordionPanel({ title, icon, children }) {
+export default function AccordionPanel({ title, icon, children, forceOpen = false, sectionId }) {
     const [open, setOpen] = useState(false);
 
+    // If external control says open, set it
+    useEffect(() => {
+        if (forceOpen) {
+            setOpen(true);
+        }
+    }, [forceOpen]);
+
     return (
-        <div className="bg-graylupa-surface mb-6 rounded-xl shadow border border-graylupa-border text-graylupa-text">
+        <div id={sectionId} className="bg-graylupa-surface mb-6 rounded-xl shadow border border-graylupa-border text-graylupa-text">
             <div
                 onClick={() => setOpen(!open)}
                 className="cursor-pointer flex items-center justify-between p-4 border-b border-black/10 text-black"

@@ -6,9 +6,9 @@ import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import { FaSlidersH, FaUserClock, FaGraduationCap } from "react-icons/fa";
 
-export default function ScoreQualityDistributions({ jobTitles }) {
+export default function ScoreQualityDistributions({ jobTitles, defaultTab = "score" }) {
     const { user } = useAuth();
-    const [view, setView] = useState("score");
+    const [view, setView] = useState(defaultTab);
     const [selectedJob, setSelectedJob] = useState("All Jobs");
     const [loading, setLoading] = useState(false);
 
@@ -34,6 +34,10 @@ export default function ScoreQualityDistributions({ jobTitles }) {
         "#fde68a", "#fcd34d", "#fbbf24", "#f59e0b",
         "#f97316", "#fb7185", "#f43f5e", "#e11d48"
     ];
+
+    useEffect(() => {
+        setView(defaultTab);
+    }, [defaultTab]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -74,12 +78,6 @@ export default function ScoreQualityDistributions({ jobTitles }) {
 
     return (
         <div className="mt-4">
-            <p className="text-gray-600 text-sm mb-4 max-w-2xl">
-                This section breaks down the distribution of candidate scores, professional experience, and educational qualifications.
-                Use it to identify trends in candidate quality and depth across your applicant pool.
-            </p>
-
-            {/* Job dropdown */}
             <div className="mb-6">
                 <label className="block text-sm mb-1 font-medium text-gray-700">Filter by Job:</label>
                 <select
@@ -94,31 +92,25 @@ export default function ScoreQualityDistributions({ jobTitles }) {
                 </select>
             </div>
 
-            {/* Tab switcher */}
+            {/* Tabs */}
             <div className="flex gap-4 mb-4">
                 <button
                     onClick={() => setView("score")}
-                    className={`flex items-center gap-2 px-4 py-2 text-sm rounded-md border ${view === "score" ? "bg-pink-600 text-white" : "bg-white text-gray-700 border-gray-300"
-                        }`}
+                    className={`flex items-center gap-2 px-4 py-2 text-sm rounded-md border ${view === "score" ? "bg-pink-600 text-white" : "bg-white text-gray-700 border-gray-300"}`}
                 >
-                    <FaSlidersH />
-                    Score Buckets
+                    <FaSlidersH /> Score Buckets
                 </button>
                 <button
                     onClick={() => setView("experience")}
-                    className={`flex items-center gap-2 px-4 py-2 text-sm rounded-md border ${view === "experience" ? "bg-pink-600 text-white" : "bg-white text-gray-700 border-gray-300"
-                        }`}
+                    className={`flex items-center gap-2 px-4 py-2 text-sm rounded-md border ${view === "experience" ? "bg-pink-600 text-white" : "bg-white text-gray-700 border-gray-300"}`}
                 >
-                    <FaUserClock />
-                    Experience Histogram
+                    <FaUserClock /> Experience Histogram
                 </button>
                 <button
                     onClick={() => setView("education")}
-                    className={`flex items-center gap-2 px-4 py-2 text-sm rounded-md border ${view === "education" ? "bg-pink-600 text-white" : "bg-white text-gray-700 border-gray-300"
-                        }`}
+                    className={`flex items-center gap-2 px-4 py-2 text-sm rounded-md border ${view === "education" ? "bg-pink-600 text-white" : "bg-white text-gray-700 border-gray-300"}`}
                 >
-                    <FaGraduationCap />
-                    Education Levels
+                    <FaGraduationCap /> Education Levels
                 </button>
             </div>
 
@@ -126,7 +118,6 @@ export default function ScoreQualityDistributions({ jobTitles }) {
                 <LoadingSpinner />
             ) : (
                 <>
-                    {/* Score chart */}
                     {view === "score" && (
                         <BarChartCard
                             title="Candidate Score Distribution"
@@ -138,8 +129,6 @@ export default function ScoreQualityDistributions({ jobTitles }) {
                             barColors={scoreColors}
                         />
                     )}
-
-                    {/* Experience chart */}
                     {view === "experience" && (
                         <BarChartCard
                             title="Experience Level Histogram"
@@ -154,8 +143,6 @@ export default function ScoreQualityDistributions({ jobTitles }) {
                             }
                         />
                     )}
-
-                    {/* Education pie */}
                     {view === "education" && (
                         <PieChartCard
                             title="Education Level Breakdown"

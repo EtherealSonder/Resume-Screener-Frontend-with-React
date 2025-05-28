@@ -4,23 +4,27 @@ import { useAuth } from "../../context/AuthContext";
 import {
     getSkillBubbleData,
     getRadarData,
-    getCandidates,
+    getCandidates
 } from "../../services/api";
 import SkillWordCloud from "../SkillWordCloudCustom";
 import RadarSkillChart from "./RadarSkillChart";
 import { FaCloud, FaBullseye } from "react-icons/fa";
 
-export default function SkillInsights() {
+export default function SkillInsights({ defaultTab = "word" }) {
     const { user } = useAuth();
     const [jobTitles, setJobTitles] = useState([]);
     const [selectedJob, setSelectedJob] = useState("");
     const [compareJobs, setCompareJobs] = useState([]);
-    const [view, setView] = useState("word"); // 'word' or 'radar'
+    const [view, setView] = useState(defaultTab); // default view
     const [type, setType] = useState("technical");
 
     const [bubbleData, setBubbleData] = useState([]);
     const [radarData, setRadarData] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        setView(defaultTab); // update view if defaultTab changes
+    }, [defaultTab]);
 
     useEffect(() => {
         async function fetchJobs() {
@@ -42,7 +46,7 @@ export default function SkillInsights() {
         setLoading(true);
         Promise.all([
             getSkillBubbleData(user.id, type),
-            getRadarData(user.id, type, compareJobs),
+            getRadarData(user.id, type, compareJobs)
         ])
             .then(([bubbleRes, radarRes]) => {
                 const filteredBubbles = selectedJob
@@ -67,14 +71,14 @@ export default function SkillInsights() {
             <div className="flex flex-wrap gap-4 mt-2">
                 {[
                     { key: "word", label: "Word Cloud", icon: <FaCloud /> },
-                    { key: "radar", label: "Radar Chart", icon: <FaBullseye /> },
+                    { key: "radar", label: "Radar Chart", icon: <FaBullseye /> }
                 ].map(({ key, label, icon }) => (
                     <button
                         key={key}
                         onClick={() => setView(key)}
                         className={`flex items-center gap-2 px-4 py-2 text-sm rounded-md border ${view === key
-                                ? "bg-amber-700 text-white"
-                                : "bg-white text-gray-700 border-gray-300"
+                            ? "bg-amber-700 text-white"
+                            : "bg-white text-gray-700 border-gray-300"
                             }`}
                     >
                         {icon}
@@ -82,8 +86,6 @@ export default function SkillInsights() {
                     </button>
                 ))}
             </div>
-
-
 
             {/* Filters Row */}
             {view === "word" && (
@@ -158,8 +160,8 @@ function SkillTypeToggle({ type, setType }) {
             <button
                 onClick={() => setType("technical")}
                 className={`px-4 py-1 text-sm rounded-full ${type === "technical"
-                        ? "bg-blue-600 text-white"
-                        : "text-gray-700 hover:bg-gray-200"
+                    ? "bg-blue-600 text-white"
+                    : "text-gray-700 hover:bg-gray-200"
                     }`}
             >
                 Technical Skills
@@ -167,8 +169,8 @@ function SkillTypeToggle({ type, setType }) {
             <button
                 onClick={() => setType("soft")}
                 className={`px-4 py-1 text-sm rounded-full ${type === "soft"
-                        ? "bg-blue-600 text-white"
-                        : "text-gray-700 hover:bg-gray-200"
+                    ? "bg-blue-600 text-white"
+                    : "text-gray-700 hover:bg-gray-200"
                     }`}
             >
                 Soft Skills
