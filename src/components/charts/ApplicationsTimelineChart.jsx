@@ -16,21 +16,18 @@ export default function ApplicationsTimelineChart({ data = [], jobs = [] }) {
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
 
-    // 🔍 Filter by selected job (only if job_title exists in data)
+    // Filter by selected job
     const filteredData = useMemo(() => {
         let filtered = [...data];
-
         if (selectedJob !== "All Jobs" && data[0]?.job_title) {
             filtered = filtered.filter(d => d.job_title === selectedJob);
         }
-
         if (startDate) filtered = filtered.filter(d => d.date >= startDate);
         if (endDate) filtered = filtered.filter(d => d.date <= endDate);
-
         return filtered;
     }, [data, selectedJob, startDate, endDate]);
 
-    // 🧠 Group by mode (daily, weekly, monthly)
+    // Group by mode (daily, weekly, monthly)
     const groupedData = useMemo(() => {
         if (viewMode === "weekly") {
             return groupBy(filteredData, date => {
@@ -46,14 +43,19 @@ export default function ApplicationsTimelineChart({ data = [], jobs = [] }) {
     }, [filteredData, viewMode]);
 
     const peak = useMemo(() => {
-        return groupedData.reduce((max, curr) => curr.count > max.count ? curr : max, { count: 0 });
+        return groupedData.reduce((max, curr) => (curr.count > max.count ? curr : max), { count: 0 });
     }, [groupedData]);
 
     return (
-        <div className="bg-white p-6 rounded-xl shadow text-black">
-            <div className="flex flex-wrap items-center gap-4 mb-6">
+        <div className="bg-gray-100 p-6 rounded-xl shadow text-black space-y-4 fade-in">
+            <div className="flex justify-between items-center">
+                <div>
+                    <h2 className="text-xl font-semibold text-amber-700">Applications Timeline</h2>
+                    <p className="text-sm text-gray-700">Tracks the volume of applications over time with filters by job and date range.</p>
+                </div>
+            </div>
 
-                {/* 🔽 Job Dropdown with label */}
+            <div className="flex flex-wrap items-center gap-4">
                 <div className="flex items-center gap-2">
                     <label className="text-sm font-medium">Filter by Job:</label>
                     <select
@@ -68,7 +70,6 @@ export default function ApplicationsTimelineChart({ data = [], jobs = [] }) {
                     </select>
                 </div>
 
-                {/* 🌀 View Toggle */}
                 <div className="flex gap-2">
                     {["daily", "weekly", "monthly"].map((mode) => (
                         <button
@@ -81,7 +82,6 @@ export default function ApplicationsTimelineChart({ data = [], jobs = [] }) {
                     ))}
                 </div>
 
-                {/* 📅 Date Filters */}
                 <div className="flex gap-2 text-sm items-center">
                     <label>From:</label>
                     <input
@@ -100,7 +100,6 @@ export default function ApplicationsTimelineChart({ data = [], jobs = [] }) {
                 </div>
             </div>
 
-            {/* 📊 Chart */}
             <LineChartCard
                 title="Applications Over Time"
                 data={groupedData}

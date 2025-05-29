@@ -19,8 +19,7 @@ export default function SkillWordCloudCustom({ data }) {
 
     if (words.length === 0) {
         return (
-            <div className="bg-white p-6 rounded-xl shadow mb-6">
-                <h2 className="text-xl font-semibold mb-4">Skill Frequency (Word Cloud)</h2>
+            <div className="bg-gray-100 p-6 rounded-xl shadow mb-6">
                 <p className="text-center text-gray-500 italic">No skills to display.</p>
             </div>
         );
@@ -48,9 +47,8 @@ export default function SkillWordCloudCustom({ data }) {
     const shuffled = [...words].sort(() => Math.random() - 0.5);
 
     return (
-        <div className="bg-white p-6 rounded-xl shadow mb-6 w-full">
-            <h2 className="text-xl font-semibold mb-4">Skill Frequency (Word Cloud)</h2>
-            <div className="relative flex flex-wrap gap-3 justify-center items-center">
+        <div className="bg-gray-100 p-6 rounded-xl shadow mb-6 w-full">
+            <div className="relative flex flex-wrap gap-4 justify-center items-center">
                 {shuffled.map((word, i) => (
                     <div
                         key={i}
@@ -58,6 +56,7 @@ export default function SkillWordCloudCustom({ data }) {
                         style={{
                             fontSize: `${getFontSize(word.value)}px`,
                             color: getColor(word.text),
+                            display: "inline-block",
                         }}
                     >
                         {word.text}

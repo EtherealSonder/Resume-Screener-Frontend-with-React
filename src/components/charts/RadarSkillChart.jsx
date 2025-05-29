@@ -1,63 +1,63 @@
-import {
-    Radar,
-    RadarChart,
-    PolarGrid,
-    PolarAngleAxis,
-    PolarRadiusAxis,
-    ResponsiveContainer,
-    Legend,
-    Tooltip,
-} from "recharts";
-
-// Helper to truncate long skill names
-function truncateSkill(skill) {
-    if (!skill) return "";
-    return skill.length > 18 ? skill.slice(0, 16) + "…" : skill;
-}
+import React from "react";
+import { ResponsiveRadar } from "@nivo/radar";
 
 export default function RadarSkillChart({ data, selectedJobs }) {
-    const isValid = data && data.length >= 3;
+    if (!data || data.length === 0 || !selectedJobs || selectedJobs.length === 0) {
+        return (
+            <p className="italic text-gray-500 text-center py-4">
+                Not enough shared skills to generate a radar chart. Try comparing jobs with more overlap.
+            </p>
+        );
+    }
 
     return (
-        <div className="bg-white p-6 rounded-xl shadow min-h-[400px] flex items-center justify-center">
-            {isValid ? (
-                <ResponsiveContainer width="100%" height={400}>
-                    <RadarChart outerRadius="80%" data={data}>
-                        <PolarGrid />
-                        <PolarAngleAxis
-                            dataKey="skill"
-                            tick={{
-                                fontSize: 11,
-                                angle: 30,
-                                dy: 8,
-                                textAnchor: "middle",
-                            }}
-                            tickFormatter={truncateSkill}
-                        />
-                        <PolarRadiusAxis />
-                        <Radar
-                            name={selectedJobs[0]}
-                            dataKey={selectedJobs[0]}
-                            stroke="#8884d8"
-                            fill="#8884d8"
-                            fillOpacity={0.6}
-                        />
-                        <Radar
-                            name={selectedJobs[1]}
-                            dataKey={selectedJobs[1]}
-                            stroke="#82ca9d"
-                            fill="#82ca9d"
-                            fillOpacity={0.6}
-                        />
-                        <Legend />
-                        <Tooltip />
-                    </RadarChart>
-                </ResponsiveContainer>
-            ) : (
-                <p className="text-gray-500 text-center italic">
-                    Not enough shared skills to generate a radar chart. Try comparing jobs with more overlap.
-                </p>
-            )}
+        <div className="w-full h-[400px] bg-gray-100 rounded p-4">
+            <ResponsiveRadar
+                data={data}
+                keys={selectedJobs}
+                indexBy="skill"
+                maxValue="auto"
+                margin={{ top: 40, right: 90, bottom: 40, left: 90 }}
+                curve="linearClosed"
+                borderWidth={2}
+                gridLevels={5}
+                gridShape="circular"
+                gridLabelOffset={36}
+                dotSize={10}
+                dotColor={{ theme: "background" }}
+                dotBorderWidth={2}
+                colors={{ scheme: "paired" }}
+                fillOpacity={0.25}
+                blendMode="multiply"
+                animate={true}
+                motionConfig="wobbly"
+                isInteractive={true}
+                legends={[
+                    {
+                        anchor: "bottom",
+                        direction: "row",
+                        translateY: 30,
+                        itemWidth: 80,
+                        itemHeight: 20,
+                        itemTextColor: "#333",
+                        symbolSize: 12,
+                        symbolShape: "circle"
+                    }
+                ]}
+                theme={{
+                    axis: {
+                        ticks: {
+                            text: {
+                                fontSize: 12,
+                                fill: "#374151",
+                                whiteSpace: "normal",
+                                overflow: "visible",
+                                textOverflow: "clip"
+                            }
+                        }
+                    }
+                }}
+            />
         </div>
     );
 }
