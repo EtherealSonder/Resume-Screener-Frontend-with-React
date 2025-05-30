@@ -8,6 +8,12 @@ import { FaArrowLeft } from "react-icons/fa";
 export default function JobsCreate() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [jobType, setJobType] = useState("");
+    const [experienceLevel, setExperienceLevel] = useState("");
+    const [jobLocationCountry, setJobLocationCountry] = useState("");
+    const [jobLocationCity, setJobLocationCity] = useState("");
+    const [otherCity, setOtherCity] = useState("");
+    const [applicationDeadline, setApplicationDeadline] = useState("");
     const [loading, setLoading] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [createdJobId, setCreatedJobId] = useState(null);
@@ -16,6 +22,22 @@ export default function JobsCreate() {
 
     const { user } = useAuth();
     const navigate = useNavigate();
+
+    const countryOptions = ["USA", "UK", "India", "Germany"]; // Example countries
+    const cityOptions = {
+        USA: ["New York", "Los Angeles", "Chicago", "Other"],
+        UK: ["London", "Manchester", "Birmingham", "Other"],
+        India: ["Mumbai", "Bangalore", "Delhi", "Other"],
+        Germany: ["Berlin", "Munich", "Hamburg", "Other"],
+    };
+    const jobTypes = ["Full-time", "Part-time", "Contract", "Temporary", "Internship"];
+    const experienceLevels = [
+        "Entry-Level / Intern / Trainee",
+        "Junior / Associate",
+        "Mid-Level / Intermediate / Specialist",
+        "Senior / Lead",
+        "Principal / Expert / Consultant",
+    ];
 
     useEffect(() => {
         if (user?.id) {
@@ -27,17 +49,34 @@ export default function JobsCreate() {
     }, [user]);
 
     const handleSubmit = async () => {
-        if (!title || !description) return;
+        setErrorMessage(null);
+
+        if (!title.trim()) {
+            setErrorMessage("Job title cannot be empty.");
+            return;
+        }
+        if (!jobLocationCountry || !jobLocationCity || (jobLocationCity === "Other" && !otherCity.trim())) {
+            setErrorMessage("Location cannot be empty.");
+            return;
+        }
+        if (!description.trim()) {
+            setErrorMessage("Job description cannot be empty.");
+            return;
+        }
+        if (!applicationDeadline) {
+            setErrorMessage("Application deadline cannot be empty.");
+            return;
+        }
 
         const titleExists = existingJobs.some(
-            (job) =>
-                job.title.trim().toLowerCase() === title.trim().toLowerCase()
+            (job) => job.title.trim().toLowerCase() === title.trim().toLowerCase()
         );
-
         if (titleExists) {
             setErrorMessage(`"${title}" already exists.`);
             return;
         }
+
+        const finalCity = jobLocationCity === "Other" ? otherCity : jobLocationCity;
 
         setLoading(true);
         try {
@@ -45,6 +84,11 @@ export default function JobsCreate() {
                 title,
                 description,
                 client_id: user.id,
+                job_type: jobType || "",
+                experience_level: experienceLevel || "No expectation on experience",
+                job_location_country: jobLocationCountry,
+                job_location_city: finalCity,
+                application_deadline: applicationDeadline,
             });
             setCreatedJobId(res.data.job_id);
             setShowSuccessModal(true);
@@ -61,6 +105,12 @@ export default function JobsCreate() {
         setShowSuccessModal(false);
         setTitle("");
         setDescription("");
+        setJobType("");
+        setExperienceLevel("");
+        setJobLocationCountry("");
+        setJobLocationCity("");
+        setOtherCity("");
+        setApplicationDeadline("");
         setErrorMessage(null);
     };
 
@@ -79,21 +129,92 @@ export default function JobsCreate() {
                     </button>
                 </div>
                 <p className="text-graylupa-muted mb-6">
-                    Add a new job posting with a clear title and description.
+                    Add a new job posting with a clear title, description, and expected details.
                 </p>
 
                 {/* Form */}
                 <input
                     className="w-full px-4 py-2 mb-4 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-300"
-                    placeholder="Job Title"
+                    placeholder="Job Title *"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                 />
+
+                <div className="mb-4">
+                    <label className="block text-sm font-medium mb-1">Job Location *</label>
+                    <select
+                        value={jobLocationCountry}
+                        onChange={(e) => {
+                            setJobLocationCountry(e.target.value);
+                            setJobLocationCity("");
+                            setOtherCity("");
+                        }}
+                        className="w-full px-4 py-2 mb-2 border border-gray-300 rounded shadow-sm"
+                    >
+                        <option value="">Select a country</option>
+                        {countryOptions.map((c) => (
+                            <option key={c} value={c}>{c}</option>
+                        ))}
+                    </select>
+                    {jobLocationCountry && (
+                        <select
+                            value={jobLocationCity}
+                            onChange={(e) => setJobLocationCity(e.target.value)}
+                            className="w-full px-4 py-2 mb-2 border border-gray-300 rounded shadow-sm"
+                        >
+                            <option value="">Select a city</option>
+                            {cityOptions[jobLocationCountry]?.map((city) => (
+                                <option key={city} value={city}>{city}</option>
+                            ))}
+                        </select>
+                    )}
+                    {jobLocationCity === "Other" && (
+                        <input
+                            type="text"
+                            placeholder="Enter other city"
+                            value={otherCity}
+                            onChange={(e) => setOtherCity(e.target.value)}
+                            className="w-full px-4 py-2 border border-gray-300 rounded shadow-sm"
+                        />
+                    )}
+                </div>
+
+                <select
+                    value={jobType}
+                    onChange={(e) => setJobType(e.target.value)}
+                    className="w-full px-4 py-2 mb-4 border border-gray-300 rounded shadow-sm"
+                >
+                    <option value="">Select Job Type (optional)</option>
+                    {jobTypes.map((type) => (
+                        <option key={type} value={type}>{type}</option>
+                    ))}
+                </select>
+
+                <select
+                    value={experienceLevel}
+                    onChange={(e) => setExperienceLevel(e.target.value)}
+                    className="w-full px-4 py-2 mb-4 border border-gray-300 rounded shadow-sm"
+                >
+                    <option value="">Select Experience Level (optional)</option>
+                    {experienceLevels.map((level) => (
+                        <option key={level} value={level}>{level}</option>
+                    ))}
+                </select>
+
+                <label className="block text-sm font-medium mb-1">Job Description *</label>
                 <textarea
                     className="w-full px-4 py-3 mb-4 border border-gray-300 rounded shadow-sm h-40 focus:outline-none focus:ring-2 focus:ring-gray-300"
-                    placeholder="Job Description"
+                    placeholder="Paste the full job description, responsibilities, requirements, and any nice-to-have skills here."
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
+                />
+
+                <label className="block text-sm font-medium mb-1">Application Deadline *</label>
+                <input
+                    type="date"
+                    value={applicationDeadline}
+                    onChange={(e) => setApplicationDeadline(e.target.value)}
+                    className="w-full px-4 py-2 mb-4 border border-gray-300 rounded shadow-sm"
                 />
 
                 {/* Actions */}
@@ -112,14 +233,7 @@ export default function JobsCreate() {
 
                         {errorMessage && (
                             <div className="bg-red-100 border border-red-300 text-red-700 px-4 py-3 rounded text-sm">
-                                {errorMessage}{" "}
-                                <button
-                                    onClick={() => navigate("/dashboard/jobs/my")}
-                                    className="underline text-blue-600 hover:text-blue-800"
-                                >
-                                    Go to My Jobs page
-                                </button>{" "}
-                                to delete or edit the job.
+                                {errorMessage}
                             </div>
                         )}
                     </div>

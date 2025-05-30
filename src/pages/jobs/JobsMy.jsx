@@ -73,6 +73,11 @@ export default function JobsMy({ selectedJob, setSelectedJob }) {
 
     const toggleSortOrder = () => setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
 
+    const isExpired = (job) => {
+        if (!job.application_deadline) return false;
+        return new Date(job.application_deadline) < new Date();
+    };
+
     if (loading) return <LoadingSpinner />;
 
     return (
@@ -132,7 +137,7 @@ export default function JobsMy({ selectedJob, setSelectedJob }) {
                         <div
                             key={job.id}
                             onClick={() => setSelectedJob(job)}
-                            className="bg-graylupa-surface text-graylupa-text hover:bg-gray-100 border border-graylupa-border transition p-5 rounded-2xl shadow-sm hover:shadow-md cursor-pointer flex flex-col gap-2"
+                            className={`cursor-pointer p-5 rounded-2xl shadow-sm transition flex flex-col gap-2 border ${isExpired(job) ? "border-red-500 bg-red-50" : "border-graylupa-border bg-graylupa-surface hover:bg-gray-100"}`}
                         >
                             <div className="flex items-center gap-3">
                                 <FaFileAlt className="text-xl text-gray-500" />
@@ -145,12 +150,18 @@ export default function JobsMy({ selectedJob, setSelectedJob }) {
                             </div>
                             <span
                                 className={`inline-block mt-2 ${job.applicantCount === 0
-                                        ? "bg-gray-100 text-gray-600"
-                                        : "bg-green-100 text-green-700"
+                                    ? "bg-gray-100 text-gray-600"
+                                    : "bg-green-100 text-green-700"
                                     } text-xs px-3 py-1 rounded-full font-medium`}
                             >
                                 {job.applicantCount} Applicants
                             </span>
+                            <p className="text-xs text-gray-600">
+                                Location: {job.job_location_country}, {job.job_location_city}
+                            </p>
+                            <p className="text-xs text-gray-600">
+                                Expires: {job.application_deadline || "N/A"}
+                            </p>
                         </div>
                     ))}
                 </div>
