@@ -13,7 +13,7 @@ import SkillInsights from "../components/charts/SkillInsights";
 import { useAuth } from "../context/AuthContext";
 import api from "../services/api";
 import LoadingSpinner from "../components/candidates/LoadingSpinner";
-import { LineChart, Line, ResponsiveContainer } from "recharts";
+import MiniMetricCard from "../components/MiniMetricCard";
 
 export default function AnalyticsPage() {
     const { user } = useAuth();
@@ -27,6 +27,11 @@ export default function AnalyticsPage() {
     const [totalJobs, setTotalJobs] = useState(0);
     const [loading, setLoading] = useState(true);
 
+    const [candidatesPctChange, setCandidatesPctChange] = useState(0);
+    const [jobsPctChange, setJobsPctChange] = useState(0);
+    const [candidatesMiniGraphData, setCandidatesMiniGraphData] = useState([]);
+    const [jobsMiniGraphData, setJobsMiniGraphData] = useState([]);
+
     const [selectedJobs, setSelectedJobs] = useState(["All Jobs"]);
 
     useEffect(() => {
@@ -35,6 +40,8 @@ export default function AnalyticsPage() {
                 const res1 = await api.get(`/candidates?client_id=${user.id}`);
                 const res2 = await api.get(`/jobs?client_id=${user.id}`);
                 const res3 = await api.get(`/statistics?client_id=${user.id}`);
+                const res4 = await api.get(`/dashboard?client_id=${user.id}`);
+
                 setCandidates(res1.data);
                 setJobs(res2.data);
                 setTimelineData(res3.data.applicationTimeline || []);
@@ -42,6 +49,13 @@ export default function AnalyticsPage() {
                 setMostApplied(res3.data.mostAppliedJobs || []);
                 setTotalCandidates(res1.data.length);
                 setTotalJobs(res2.data.length);
+
+                // Updated: Set real-time metrics from /dashboard
+                setCandidatesPctChange(res4.data.candidates.percentage_change);
+                setJobsPctChange(res4.data.jobs.percentage_change);
+                setCandidatesMiniGraphData(res4.data.candidates.mini_graph_data);
+                setJobsMiniGraphData(res4.data.jobs.mini_graph_data);
+
             } catch (err) {
                 console.error("Error fetching overview data:", err);
             } finally {
@@ -62,35 +76,25 @@ export default function AnalyticsPage() {
         { key: "radarChart", label: "Skill Radar Chart", icon: <FaBullseye /> }
     ];
 
-    const miniChartData = [
-        { name: "Mon", value: 10 },
-        { name: "Tue", value: 12 },
-        { name: "Wed", value: 14 },
-        { name: "Thu", value: 16 },
-        { name: "Fri", value: 15 },
-        { name: "Sat", value: 18 },
-        { name: "Sun", value: 20 },
-    ];
-
     if (loading) return <LoadingSpinner />;
 
     return (
         <div className="bg-graylupa-bg p-6 rounded-2xl text-graylupa-text animate-fadeIn space-y-6">
             {/* Overview Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <MetricCard
+                <MiniMetricCard
                     icon={<FaUsers size={24} className="text-gray-700" />}
                     title="Total Candidates"
                     value={totalCandidates}
-                    percentage="+12% since last week"
-                    data={miniChartData}
+                    percentageChange={candidatesPctChange}
+                    miniGraphData={candidatesMiniGraphData}
                 />
-                <MetricCard
+                <MiniMetricCard
                     icon={<FaBriefcase size={24} className="text-gray-700" />}
                     title="Total Jobs"
                     value={totalJobs}
-                    percentage="-5% since last week"
-                    data={miniChartData}
+                    percentageChange={jobsPctChange}
+                    miniGraphData={jobsMiniGraphData}
                 />
             </div>
 
@@ -162,35 +166,6 @@ export default function AnalyticsPage() {
                     )}
                 </div>
             </div>
-        </div>
-    );
-}
-
-function MetricCard({ icon, title, value, percentage, data }) {
-    const lineColor = percentage.startsWith("+") ? "#22c55e" : "#ef4444";
-    return (
-        <div className="bg-white p-4 rounded-xl shadow border border-gray-300 flex flex-col gap-2">
-            <div className="flex items-center gap-2">
-                {icon}
-                <div>
-                    <p className="text-xs text-gray-500">{title}</p>
-                    <p className="text-xl font-bold text-gray-800">{value}</p>
-                </div>
-            </div>
-            <div className="h-12">
-                <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={data}>
-                        <Line
-                            type="monotone"
-                            dataKey="value"
-                            stroke={lineColor}
-                            strokeWidth={2}
-                            dot={false}
-                        />
-                    </LineChart>
-                </ResponsiveContainer>
-            </div>
-            <p className="text-xs text-gray-500">{percentage}</p>
         </div>
     );
 }

@@ -151,21 +151,19 @@ export default function CandidateDetail({ candidate, onClose }) {
                         />
 
                         {/* Cover Letter Analysis */}
-                        <hr className="my-6" />
-                        <CoverLetterAnalysis
-                            report={
-                                candidate.cover_letter_analysis || {
-                                    analysis: "No cover letter provided.",
-                                    issues: [],
-                                    recommendation: "Cover letter missing — request one from candidate.",
-                                }
-                            }
-                            score={
-                                typeof candidate.ai_writing_score === "number"
-                                    ? candidate.ai_writing_score
-                                    : 0
-                            }
-                        />
+                        {candidate.cover_letter_analysis && (
+                            <>
+                                <hr className="my-6" />
+                                <CoverLetterAnalysis
+                                    report={candidate.cover_letter_analysis}
+                                    score={
+                                        typeof candidate.ai_writing_score === "number"
+                                            ? candidate.ai_writing_score
+                                            : 0
+                                    }
+                                />
+                            </>
+                        )}
                     </div>
                     {/* END: Downloadable Content */}
 

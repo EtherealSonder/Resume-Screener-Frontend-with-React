@@ -138,7 +138,7 @@ export default function TopCandidatesTable({
                         </thead>
                         <tbody className="text-gray-800">
                             {filtered.map((c, idx) => (
-                                <tr key={idx} className="border-t border-gray-200 hover:bg-gray-50">
+                                <tr key={c.email || c.name || idx} className="border-t border-gray-200 hover:bg-gray-50">
                                     <td className="px-3 py-2 font-medium">{idx + 1}</td>
                                     <td className="px-3 py-2">
                                         <button
