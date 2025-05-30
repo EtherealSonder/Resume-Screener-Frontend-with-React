@@ -14,14 +14,11 @@ import CandidatesPage from "../pages/CandidatesPage";
 import SettingsPage from "../pages/SettingsPage";
 import AnalyticsPage from "../pages/AnalyticsPage";
 import ProtectedRoute from "../components/ProtectedRoute";
-import AskLupiq from "../pages/AskLupiq"; 
-// Job Pages
+import AskLupiq from "../pages/AskLupiq";
 import JobsMain from "../pages/jobs/JobsMain";
 import JobsMy from "../pages/jobs/JobsMy";
 import JobsMyWrapper from "../pages/jobs/JobsMyWrapper";
-
 import JobsCreate from "../pages/jobs/JobsCreate";
-
 import ApplyPage from "../pages/ApplyPage";
 
 const router = createBrowserRouter(
@@ -42,7 +39,8 @@ const router = createBrowserRouter(
                     </ProtectedRoute>
                 }
             >
-                <Route index element={<DashboardPage />} />
+                {/* Home page is now AnalyticsPage */}
+                <Route index element={<AnalyticsPage />} />
                 <Route path="candidates" element={<CandidatesPage />} />
                 <Route path="statistics" element={<AnalyticsPage />} />
                 <Route path="asklupiq" element={<AskLupiq />} />

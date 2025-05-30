@@ -19,10 +19,10 @@ export default function Sidebar() {
                 <h1 className="text-2xl font-bold mb-8 tracking-wide">LUPIQ</h1>
 
                 <nav className="flex flex-col gap-4 text-lg">
-                    <NavLinkItem to="/dashboard" icon={<FaHome />} label="Home" exact={true} />
+                    {/* Home now points to /dashboard/statistics */}
+                    <NavLinkItem to="/dashboard/statistics" icon={<FaHome />} label="Home" exact={true} />
                     <NavLinkItem to="/dashboard/candidates" icon={<FaUser />} label="Candidates" />
                     <NavLinkItem to="/dashboard/jobs" icon={<FaBriefcase />} label="Jobs" />
-                    <NavLinkItem to="/dashboard/statistics" icon={<FaChartPie />} label="Analytics" />
                     <NavLinkItem to="/dashboard/asklupiq" icon={<FaRobot />} label={<em>AskLupiq</em>} />
                 </nav>
             </div>

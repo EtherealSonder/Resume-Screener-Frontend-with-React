@@ -1,44 +1,49 @@
 ﻿import { useEffect, useState } from "react";
 import {
-    FaChartBar, FaUserTie, FaBrain, FaTools, FaTable,
-    FaChartLine, FaCloud, FaBullseye, FaUserClock, FaGraduationCap
+    FaChartBar, FaUserTie, FaBrain, FaTable, FaChartLine,
+    FaCloud, FaBullseye, FaUserClock, FaGraduationCap,
+    FaUsers, FaBriefcase
 } from "react-icons/fa";
 import TopCandidatesTable from "../components/Tables/TopCandidatesTable";
+import ApplicationsTimelineChart from "../components/charts/ApplicationsTimelineChart";
 import ScoreExperienceChart from "../components/charts/ScoreExperienceChart";
 import MostAppliedJobsTable from "../components/Tables/MostAppliedJobsTable";
-import ApplicationsTimelineChart from "../components/charts/ApplicationsTimelineChart";
 import ScoreQualityDistributions from "../components/ScoreQualityDistributions";
 import SkillInsights from "../components/charts/SkillInsights";
 import { useAuth } from "../context/AuthContext";
 import api from "../services/api";
 import LoadingSpinner from "../components/candidates/LoadingSpinner";
+import { LineChart, Line, ResponsiveContainer } from "recharts";
 
 export default function AnalyticsPage() {
     const { user } = useAuth();
     const [view, setView] = useState("topCandidates");
     const [candidates, setCandidates] = useState([]);
+    const [jobs, setJobs] = useState([]);
+    const [timelineData, setTimelineData] = useState([]);
     const [scoreExpPlot, setScoreExpPlot] = useState([]);
     const [mostApplied, setMostApplied] = useState([]);
-    const [timelineData, setTimelineData] = useState([]);
-    const [jobs, setJobs] = useState([]);
-    const [topCandidatesFilter, setTopCandidatesFilter] = useState(["All Jobs"]);
-    const [scoreExpFilter, setScoreExpFilter] = useState(["All Jobs"]);
+    const [totalCandidates, setTotalCandidates] = useState(0);
+    const [totalJobs, setTotalJobs] = useState(0);
     const [loading, setLoading] = useState(true);
+
+    const [selectedJobs, setSelectedJobs] = useState(["All Jobs"]);
 
     useEffect(() => {
         async function fetchData() {
             try {
                 const res1 = await api.get(`/candidates?client_id=${user.id}`);
-                const res2 = await api.get(`/statistics?client_id=${user.id}`);
-                const res3 = await api.get(`/jobs?client_id=${user.id}`);
-                const jobTitles = res3.data.map((j) => j.title);
+                const res2 = await api.get(`/jobs?client_id=${user.id}`);
+                const res3 = await api.get(`/statistics?client_id=${user.id}`);
                 setCandidates(res1.data);
-                setScoreExpPlot(res2.data.scoreExperiencePlot || []);
-                setMostApplied(res2.data.mostAppliedJobs || []);
-                setTimelineData(res2.data.applicationTimeline || []);
-                setJobs(jobTitles);
+                setJobs(res2.data);
+                setTimelineData(res3.data.applicationTimeline || []);
+                setScoreExpPlot(res3.data.scoreExperiencePlot || []);
+                setMostApplied(res3.data.mostAppliedJobs || []);
+                setTotalCandidates(res1.data.length);
+                setTotalJobs(res2.data.length);
             } catch (err) {
-                console.error("Error fetching analytics data:", err);
+                console.error("Error fetching overview data:", err);
             } finally {
                 setLoading(false);
             }
@@ -50,7 +55,6 @@ export default function AnalyticsPage() {
         { key: "topCandidates", label: "Top Candidates Table", icon: <FaTable /> },
         { key: "scoreExperience", label: "Score vs Experience Correlation", icon: <FaChartLine /> },
         { key: "mostApplied", label: "Most Applied Jobs", icon: <FaChartBar /> },
-        { key: "timeline", label: "Applications Timeline", icon: <FaChartLine /> },
         { key: "scoreQuality", label: "Score Buckets Distribution", icon: <FaBrain /> },
         { key: "experienceHistogram", label: "Experience Histogram", icon: <FaUserClock /> },
         { key: "educationLevels", label: "Education Level Breakdown", icon: <FaGraduationCap /> },
@@ -58,14 +62,54 @@ export default function AnalyticsPage() {
         { key: "radarChart", label: "Skill Radar Chart", icon: <FaBullseye /> }
     ];
 
+    const miniChartData = [
+        { name: "Mon", value: 10 },
+        { name: "Tue", value: 12 },
+        { name: "Wed", value: 14 },
+        { name: "Thu", value: 16 },
+        { name: "Fri", value: 15 },
+        { name: "Sat", value: 18 },
+        { name: "Sun", value: 20 },
+    ];
+
     if (loading) return <LoadingSpinner />;
 
     return (
-        <div className="bg-graylupa-bg p-6 rounded-2xl text-graylupa-text animate-fadeIn">
-            <div className="rounded-2xl bg-graylupa-surface border border-graylupa-border shadow p-6 space-y-6">
-                <h1 className="text-3xl font-bold text-gray-800">Analytics & Insights</h1>
+        <div className="bg-graylupa-bg p-6 rounded-2xl text-graylupa-text animate-fadeIn space-y-6">
+            {/* Overview Metrics */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <MetricCard
+                    icon={<FaUsers size={24} className="text-gray-700" />}
+                    title="Total Candidates"
+                    value={totalCandidates}
+                    percentage="+12% since last week"
+                    data={miniChartData}
+                />
+                <MetricCard
+                    icon={<FaBriefcase size={24} className="text-gray-700" />}
+                    title="Total Jobs"
+                    value={totalJobs}
+                    percentage="-5% since last week"
+                    data={miniChartData}
+                />
+            </div>
 
-                {/* Scrollable analytics buttons */}
+            {/* Applications Timeline Section */}
+            <div className="rounded-2xl bg-graylupa-surface border border-graylupa-border shadow p-6 space-y-4">
+                <h1 className="text-3xl font-bold text-gray-800">Applications Timeline</h1>
+                <p className="text-sm text-gray-600">
+                    Tracks the volume of applications over time with filters for job title and date range.
+                </p>
+                <ApplicationsTimelineChart data={timelineData} jobs={jobs.map(j => j.title)} />
+            </div>
+
+            {/* Analytics Section */}
+            <div className="rounded-2xl bg-graylupa-surface border border-graylupa-border shadow p-6 space-y-4">
+                <h1 className="text-3xl font-bold text-gray-800">Analytics & Insights</h1>
+                <p className="text-sm text-gray-600">
+                    Dive deeper into the performance and trends of your candidates, job postings, and skill match data.
+                </p>
+
                 <div className="flex overflow-x-auto gap-2 pb-2">
                     {analyticsOptions.map(opt => (
                         <button
@@ -83,36 +127,32 @@ export default function AnalyticsPage() {
                     ))}
                 </div>
 
-                {/* Active Analytics Content */}
                 <div className="bg-gray-100 p-6 rounded-xl shadow-lg text-black space-y-4 animate-fadeIn">
                     {view === "topCandidates" && (
                         <TopCandidatesTable
                             candidates={candidates}
-                            selectedJobs={topCandidatesFilter}
-                            onChangeJobs={setTopCandidatesFilter}
+                            selectedJobs={selectedJobs}
+                            onChangeJobs={setSelectedJobs}
                         />
                     )}
                     {view === "scoreExperience" && (
                         <ScoreExperienceChart
                             data={scoreExpPlot}
-                            selectedJobs={scoreExpFilter}
-                            onChangeJobs={setScoreExpFilter}
+                            selectedJobs={selectedJobs}
+                            onChangeJobs={setSelectedJobs}
                         />
                     )}
                     {view === "mostApplied" && (
                         <MostAppliedJobsTable data={mostApplied} />
                     )}
-                    {view === "timeline" && (
-                        <ApplicationsTimelineChart data={timelineData} jobs={jobs} />
-                    )}
                     {view === "scoreQuality" && (
-                        <ScoreQualityDistributions jobTitles={jobs} defaultTab="score" />
+                        <ScoreQualityDistributions jobTitles={jobs.map(j => j.title)} defaultTab="score" />
                     )}
                     {view === "experienceHistogram" && (
-                        <ScoreQualityDistributions jobTitles={jobs} defaultTab="experience" />
+                        <ScoreQualityDistributions jobTitles={jobs.map(j => j.title)} defaultTab="experience" />
                     )}
                     {view === "educationLevels" && (
-                        <ScoreQualityDistributions jobTitles={jobs} defaultTab="education" />
+                        <ScoreQualityDistributions jobTitles={jobs.map(j => j.title)} defaultTab="education" />
                     )}
                     {view === "wordCloud" && (
                         <SkillInsights defaultTab="word" />
@@ -122,6 +162,35 @@ export default function AnalyticsPage() {
                     )}
                 </div>
             </div>
+        </div>
+    );
+}
+
+function MetricCard({ icon, title, value, percentage, data }) {
+    const lineColor = percentage.startsWith("+") ? "#22c55e" : "#ef4444";
+    return (
+        <div className="bg-white p-4 rounded-xl shadow border border-gray-300 flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+                {icon}
+                <div>
+                    <p className="text-xs text-gray-500">{title}</p>
+                    <p className="text-xl font-bold text-gray-800">{value}</p>
+                </div>
+            </div>
+            <div className="h-12">
+                <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={data}>
+                        <Line
+                            type="monotone"
+                            dataKey="value"
+                            stroke={lineColor}
+                            strokeWidth={2}
+                            dot={false}
+                        />
+                    </LineChart>
+                </ResponsiveContainer>
+            </div>
+            <p className="text-xs text-gray-500">{percentage}</p>
         </div>
     );
 }
