@@ -1,17 +1,20 @@
-﻿// components/candidates/CandidateDetail.jsx
-import {
+﻿import {
     FaTimes,
     FaExternalLinkAlt,
     FaDownload,
     FaUser,
+    FaBriefcase,
+    FaGraduationCap,
+    FaEnvelope,
+    FaPhone,
+    FaSuitcase,
 } from "react-icons/fa";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { useRef } from "react";
 
 import InfoRow from "./InfoRow";
-import ScoreBar from "./ScoreBar";
-import SkillsBar from "./SkillsBar";
+import DonutScore from "./DonutScore";
 import SummaryCard from "./SummaryCard";
 import TwoColumnBox from "./TwoColumnBox";
 import TagList from "./TagList";
@@ -20,7 +23,6 @@ import CoverLetterAnalysis from "./CoverLetterAnalysis";
 
 function parseTags(raw) {
     if (!raw) return [];
-
     if (Array.isArray(raw)) return raw;
     if (typeof raw !== "string") raw = String(raw);
 
@@ -38,7 +40,7 @@ function parseTags(raw) {
     } catch { }
 
     return raw
-        .replace(/[\[\]{}"]/g, "")
+        .replace(/[\[\]{}\"]+/g, "")
         .split(",")
         .map((s) => s.trim())
         .filter(Boolean);
@@ -56,12 +58,7 @@ export default function CandidateDetail({ candidate, onClose }) {
         const canvas = await html2canvas(element, { scale: 2 });
         const imgData = canvas.toDataURL("image/png");
 
-        const pdf = new jsPDF({
-            orientation: "portrait",
-            unit: "pt",
-            format: "a4",
-        });
-
+        const pdf = new jsPDF({ orientation: "portrait", unit: "pt", format: "a4" });
         const pageWidth = pdf.internal.pageSize.getWidth();
         const imgWidth = pageWidth - 40;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
@@ -73,120 +70,125 @@ export default function CandidateDetail({ candidate, onClose }) {
     return (
         <ModalPortal>
             <div className="fixed inset-0 z-[1000] bg-black/60 backdrop-blur-sm flex items-center justify-center">
-                <div className="relative bg-white w-full max-w-5xl max-h-[95vh] rounded-2xl shadow-2xl p-8 overflow-y-auto animate-fade-scale">
+                <div className="relative bg-gray-50 w-full max-w-5xl max-h-[95vh] rounded-2xl shadow-2xl p-8 overflow-y-auto animate-fade-scale">
                     {/* Header */}
-                    <div className="flex justify-between items-center mb-6 sticky top-0 bg-white z-10 pb-2 border-b border-gray-200">
+                    <div className="flex justify-between items-center mb-6 sticky top-0 bg-gray-50 z-10 pb-2 border-b border-gray-200">
                         <h2 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
-                            <FaUser className="text-blue-600" />
+                            <FaUser className="text-gray-500" />
                             {candidate.name}
                         </h2>
-                        <button
-                            className="text-gray-500 hover:text-red-500 text-2xl"
-                            onClick={onClose}
-                        >
+                        <button className="text-gray-500 hover:text-red-500 text-2xl" onClick={onClose}>
                             <FaTimes />
                         </button>
                     </div>
 
                     {/* BEGIN: Downloadable Content */}
                     <div ref={contentRef}>
-                        {/* Contact Info */}
-                        <InfoRow
-                            email={candidate.email}
-                            phone={candidate.phone}
-                            date={candidate.submitted_at}
-                        />
+                        {/* Job title */}
+                        <p className="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
+                            <FaSuitcase className="text-gray-500" />
+                            {candidate.job_title}
+                        </p>
 
-                        {/* Score */}
-                        <ScoreBar label="Candidate Score" score={candidate.score} />
-
-                        {/* Summary */}
-                        {candidate.summary && <SummaryCard summary={candidate.summary} />}
-
-                        {/* Strengths & Weaknesses */}
-                        <TwoColumnBox
-                            strengths={candidate.strengths}
-                            weaknesses={candidate.weaknesses}
-                        />
-
-                        {/* Skill Match */}
-                        <SkillsBar percentage={candidate.skill_match || 0} />
-
-                        {/* Experience, Education, Portfolio */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                            <div>
-                                <h4 className="text-base font-bold text-gray-700 mb-1">Experience</h4>
-                                <p className="text-base text-gray-800">{candidate.experience} yrs</p>
-                            </div>
-                            <div>
-                                <h4 className="text-base font-bold text-gray-700 mb-1">Education</h4>
-                                <p className="text-base text-gray-800">{candidate.education}</p>
-                            </div>
-                            {candidate.portfolio_url && (
-                                <div className="col-span-full">
-                                    <h4 className="text-base font-bold text-gray-700 mb-1">Portfolio</h4>
-                                    <a
-                                        href={candidate.portfolio_url}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        className="text-base text-blue-600 hover:underline inline-flex items-center gap-1"
-                                    >
-                                        {candidate.portfolio_url}
-                                        <FaExternalLinkAlt className="text-sm" />
-                                    </a>
+                        {/* Info Row (first line with icons) */}
+                        <div className="flex flex-wrap gap-x-8 gap-y-2 mb-2 text-sm text-gray-700 items-center">
+                            {candidate.email && (
+                                <div className="flex items-center gap-2 text-gray-700">
+                                    <FaEnvelope className="text-gray-600 text-base" />
+                                    {candidate.email}
+                                </div>
+                            )}
+                            {candidate.phone && (
+                                <div className="flex items-center gap-2 text-gray-700">
+                                    <FaPhone className="text-gray-600 text-base" />
+                                    {candidate.phone}
+                                </div>
+                            )}
+                            {candidate.education && (
+                                <div className="flex items-center gap-2 text-gray-700">
+                                    <FaGraduationCap className="text-gray-600 text-base" />
+                                    {candidate.education}
                                 </div>
                             )}
                         </div>
 
+                        {/* Info Row (second line without icons) */}
+                        <div className="text-sm text-gray-700 mb-6 space-x-6">
+                            {candidate.submitted_at && (
+                                <span>
+                                    <strong>Application submitted on:</strong> {candidate.submitted_at}
+                                </span>
+                            )}
+                            {candidate.experience && (
+                                <span>
+                                    <strong>Work Experience:</strong> {candidate.experience} years
+                                </span>
+                            )}
+                        </div>
+
+                        {/* Links */}
+                        <div className="flex flex-wrap gap-4 mb-6">
+                            {candidate.portfolio_url && (
+                                <a href={candidate.portfolio_url} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline flex items-center gap-1">
+                                    Portfolio <FaExternalLinkAlt className="text-sm" />
+                                </a>
+                            )}
+                            {candidate.github_url && (
+                                <a href={candidate.github_url} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline flex items-center gap-1">
+                                    GitHub <FaExternalLinkAlt className="text-sm" />
+                                </a>
+                            )}
+                            {candidate.linkedin_url && (
+                                <a href={candidate.linkedin_url} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline flex items-center gap-1">
+                                    LinkedIn <FaExternalLinkAlt className="text-sm" />
+                                </a>
+                            )}
+                        </div>
+
+                        {/* Donut Score Row */}
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 justify-items-center">
+                            <DonutScore label="Candidate Match" score={candidate.score || 0} breakdown={candidate.score_breakdown} />
+                            <DonutScore label="Skill Match %" score={candidate.skill_match || 0} breakdown={candidate.skill_match_breakdown} />
+                            <DonutScore label="Resume Quality" score={candidate.resume_quality_score || 0} breakdown={candidate.resume_quality_breakdown} />
+                        </div>
+
+                        {/* Summary & Strengths/Weaknesses */}
+                        {candidate.summary && <SummaryCard summary={candidate.summary} />}
+                        <TwoColumnBox strengths={candidate.strengths} weaknesses={candidate.weaknesses} />
+
                         {/* Skills */}
-                        <TagList
-                            title="Technical Skills"
-                            tags={technicalSkills}
-                            icon={<span className="text-pink-500">💼</span>}
-                        />
-                        <TagList
-                            title="Soft Skills"
-                            tags={softSkills}
-                            icon={<span className="text-purple-500">🤝</span>}
-                        />
+                        <TagList title="Technical Skills" tags={technicalSkills} icon={<span className="text-gray-500">💼</span>} />
+                        <TagList title="Soft Skills" tags={softSkills} icon={<span className="text-gray-500">🤝</span>} />
 
                         {/* Cover Letter Analysis */}
                         {candidate.cover_letter_analysis && (
                             <>
                                 <hr className="my-6" />
-                                <CoverLetterAnalysis
-                                    report={candidate.cover_letter_analysis}
-                                    score={
-                                        typeof candidate.ai_writing_score === "number"
-                                            ? candidate.ai_writing_score
-                                            : 0
-                                    }
-                                />
+                                <CoverLetterAnalysis report={candidate.cover_letter_analysis} score={candidate.ai_writing_score || 0} />
                             </>
                         )}
-                    </div>
-                    {/* END: Downloadable Content */}
 
-                    {/* Footer Buttons */}
-                    <div className="mt-8 flex flex-wrap gap-4 justify-end">
-                        {candidate.resume_url && (
-                            <a
-                                href={candidate.resume_url}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="inline-flex items-center gap-2 bg-blue-600 text-white px-5 py-3 rounded hover:bg-blue-700 font-semibold text-sm"
+                        {/* Action Buttons */}
+                        <div className="mt-8 flex flex-wrap gap-4 justify-end">
+                            {candidate.resume_url && (
+                                <a
+                                    href={candidate.resume_url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-flex items-center gap-2 bg-blue-600 text-white px-5 py-3 rounded hover:bg-blue-700 font-semibold text-sm"
+                                >
+                                    <FaDownload />
+                                    Download Resume
+                                </a>
+                            )}
+                            <button
+                                onClick={handleDownloadPDF}
+                                className="inline-flex items-center gap-2 bg-green-600 text-white px-5 py-3 rounded hover:bg-green-700 font-semibold text-sm"
                             >
                                 <FaDownload />
-                                Download Resume
-                            </a>
-                        )}
-                        <button
-                            onClick={handleDownloadPDF}
-                            className="inline-flex items-center gap-2 bg-green-600 text-white px-5 py-3 rounded hover:bg-green-700 font-semibold text-sm"
-                        >
-                            <FaDownload />
-                            Download Report
-                        </button>
+                                Download Report
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

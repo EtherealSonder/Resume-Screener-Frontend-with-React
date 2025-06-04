@@ -18,8 +18,10 @@
 
 html, body {
     height: 100%;
-    overflow: hidden; /* Prevent scroll behind modals */
+    overflow-x: hidden;
+    overflow-y: auto;
 }
+
 
 body {
     @apply font-sans overflow-hidden;

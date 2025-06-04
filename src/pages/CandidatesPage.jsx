@@ -1,3 +1,4 @@
+// pages/CandidatesPage.jsx
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import CandidateCard from "../components/candidates/CandidateCard";
@@ -69,8 +70,6 @@ export default function CandidatesPage() {
     return (
         <div className="bg-graylupa-bg p-6 rounded-2xl text-graylupa-text animate-fadeIn">
             <div className="rounded-2xl bg-graylupa-surface border border-graylupa-border shadow p-6 transition-all duration-300">
-
-
                 <h1 className="text-3xl font-bold mb-4">Candidates</h1>
 
                 {/* Search */}
@@ -103,14 +102,12 @@ export default function CandidatesPage() {
                         />
                     ))}
                 </div>
-
-                {/* Expanded View */}
-                {selected && (
-                    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center">
-                        <CandidateDetail candidate={selected} onClose={() => setSelected(null)} />
-                    </div>
-                )}
             </div>
+
+            {/* Modal moved OUTSIDE inner container */}
+            {selected && (
+                <CandidateDetail candidate={selected} onClose={() => setSelected(null)} />
+            )}
         </div>
     );
 }

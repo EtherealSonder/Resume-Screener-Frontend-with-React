@@ -5,7 +5,7 @@ import { AuthProvider } from './context/AuthContext';
 import "@fontsource/dm-sans";
 import './index.css';
 
-document.body.className = "overflow-hidden font-sans";
+document.body.className = "font-sans";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
