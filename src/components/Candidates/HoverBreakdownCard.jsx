@@ -26,8 +26,9 @@ export default function HoverBreakdownCard({ breakdown }) {
     }
 
     return (
-        <div className="bg-gray-800 text-white rounded-xl shadow-lg p-4 text-xs max-w-sm w-full animate-fade-in leading-relaxed whitespace-pre-wrap">
-            {textSummary}
-        </div>
+        <div
+            className="bg-gray-800 text-white rounded-xl shadow-lg p-4 text-xs max-w-sm w-full animate-fade-in leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: textSummary }}
+        />
     );
 }

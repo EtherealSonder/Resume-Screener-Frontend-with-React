@@ -1,62 +1,148 @@
-// src/utils/formatBreakdownText.js
-
 export function formatSkillMatch(breakdown) {
-    if (!breakdown || typeof breakdown !== 'object') return "Skill match breakdown not available.";
+    if (!breakdown || typeof breakdown !== "object") return "Skill match breakdown not available.";
 
-    const total = breakdown.expected_skills?.length || 0;
-    const matched = breakdown.matched_skills?.length || 0;
-    const missingList = breakdown.missing_skills || [];
+    const expected = breakdown.expected_skills || [];
+    const matched = breakdown.matched_skills || [];
+    const missing = breakdown.missing_skills || [];
+    const matchCount = matched.length;
+    const totalCount = expected.length;
 
-    const matchPct = breakdown.match_pct !== undefined ? `${breakdown.match_pct}%` : "Unknown";
+    let result = `<strong>Skill Match Breakdown</strong><br><br>`;
 
-    let text = `Candidate matches ${matched} out of ${total} required technical skills (${matchPct}).`;
-
-    if (missingList.length > 0) {
-        const missing = missingList.slice(0, 5).join(", ");
-        text += ` Missing skills include: ${missing}${missingList.length > 5 ? ", and more." : "."}`;
-    } else {
-        text += ` All expected skills are matched.`;
+    if (matchCount > 0) {
+        result += `The candidate has the following matching skills:<br>`;
+        result += matched
+            .map(
+                (skill) =>
+                    `<span class="inline-block bg-green-600 text-white text-[11px] font-medium px-2 py-0.5 rounded mr-1 mb-1">${skill}</span>`
+            )
+            .join(" ");
+        result += `<br><br>`;
     }
 
-    return text;
+    if (missing.length > 0) {
+        result += `Missing required skills:<br>`;
+        result += missing
+            .map(
+                (skill) =>
+                    `<span class="inline-block bg-red-600 text-white text-[11px] font-medium px-2 py-0.5 rounded mr-1 mb-1">${skill}</span>`
+            )
+            .join(" ");
+        result += `<br><br>`;
+    }
+
+    result += `Matched ${matchCount} out of ${totalCount} required skills.`;
+
+    return result;
 }
 
+
 export function formatResumeQuality(breakdown) {
-    if (!breakdown || typeof breakdown !== 'object') return "Resume quality breakdown not available.";
+    if (!breakdown || typeof breakdown !== "object") return "Resume quality breakdown not available.";
 
-    const entries = Object.entries(breakdown);
-    if (entries.length === 0) return "No resume quality data found.";
+    const metricLabels = {
+        structure: "Structure",
+        formatting: "Formatting",
+        word_count: "Word Count",
+        consistency: "Consistency",
+        contact_info: "Contact Info",
+        section_headers: "Section Headers",
+        ats_compatibility: "ATS Compatibility",
+        readability_flesch: "Flesch Kincaid Readability Score",
+        readability_grammar: "Readability & Grammar"
+    };
 
-    let text = "Resume analysis summary:\n";
+    let result = `<strong>Resume Quality Breakdown</strong><br><br>`;
 
-    for (const [key, value] of entries) {
-        if (value && typeof value === 'object') {
-            const explanation = value.explanation || "";
-            const score = value.score !== undefined ? ` (Score: ${Math.round(value.score * 100)}%)` : "";
-            const formattedKey = key.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
-            text += `• ${formattedKey}:${score} ${explanation}\n`;
+    for (const [key, value] of Object.entries(breakdown)) {
+        if (key === "bullet_points") continue; // Skip bullet point display
+
+        if (!value || typeof value !== "object") continue;
+
+        const label = metricLabels[key] || key.replace(/_/g, " ");
+        const contribution = typeof value.contribution === "number" ? value.contribution : null;
+
+        // Custom explanations
+        let explanation = value.explanation || "";
+        if (key === "readability_grammar") {
+            const match = explanation.match(/Detected \d+ grammar\/spelling issues\./);
+            explanation = match ? match[0] : "Detected grammar/spelling issues.";
         }
+        if (key === "section_headers") {
+            const match = explanation.match(/Detected \d+ header/i);
+            explanation = match ? match[0] + "." : "Detected section headers.";
+        }
+
+        result += `- <strong>${label}:</strong> ${explanation}`;
+        if (contribution !== null) {
+            result += ` <span class="inline-block ml-2 bg-blue-600 text-white text-[10px] font-semibold px-2 py-0.5 rounded">${contribution} pts</span>`;
+        }
+        result += `<br>`;
     }
 
-    return text.trim();
+    return result.trim();
 }
 
 export function formatScoreBreakdown(breakdown) {
-    if (!breakdown || typeof breakdown !== 'object') return "Score breakdown not available.";
+    if (!breakdown || typeof breakdown !== "object") return "Candidate match breakdown not available.";
 
-    const entries = Object.entries(breakdown);
-    if (entries.length === 0) return "No breakdown data available.";
+    const order = [
+        "skill_match",
+        "experience_match",
+        "education_match",
+        "certifications_match",
+        "soft_skills_match",
+        "language_match",
+        "portfolio_match",
+        "previous_role_alignment",
+    ];
 
-    let text = "Final score summary:\n";
+    const defaultHints = [
+        "no language requirement",
+        "no portfolio requirement",
+        "no soft skills required",
+        "no certifications required",
+    ];
 
-    for (const [key, value] of entries) {
-        if (value && typeof value === 'object') {
-            const explanation = value.explanation || "";
-            const score = value.score !== undefined ? ` (Score: ${value.score})` : "";
-            const formattedKey = key.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
-            text += `• ${formattedKey}:${score} ${explanation}\n`;
+    const lines = [];
+
+    for (const key of order) {
+        const metric = breakdown[key];
+        if (!metric || typeof metric !== "object") continue;
+
+        const raw = metric.explanation?.toLowerCase() || "";
+        const value = metric.explanation || "";
+        const contribution = typeof metric.contribution === "number" ? `${metric.contribution} pts` : null;
+
+        if (defaultHints.some((hint) => raw.includes(hint))) continue;
+
+        let line = "";
+
+        if (key === "skill_match") {
+            line = `- ${value.trim()}`;
+        } else if (key === "experience_match") {
+            const expectedMatch = value.match(/Expected experience:.*?(\d[+\.]?\d*)/);
+            const candidateMatch = value.match(/Candidate has ([\d\.]+) years/);
+            const expected = expectedMatch ? expectedMatch[1] : "N/A";
+            const candidate = candidateMatch ? candidateMatch[1] : "N/A";
+            line = `- Job requires ${expected} years. Candidate has ${candidate} years.`;
+        } else if (key === "education_match") {
+            line = `- Candidate has education level that meets job requirement.`;
+        } else {
+            line = `- ${value.trim()}`;
         }
+
+        if (contribution) {
+            line += ` <span class="inline-block ml-2 bg-blue-600 text-white text-[10px] font-semibold px-2 py-0.5 rounded">${contribution} pts</span>`;
+        }
+
+        lines.push(line);
     }
 
-    return text.trim();
+    if (lines.length === 0) return "Candidate match breakdown not available.";
+
+    const intro =
+        "<strong>Candidate Match Score Breakdown</strong><br>This score is calculated based on how well the candidate meets key criteria such as skills, experience, education, certifications, and previous roles.<br><br>";
+
+    return `${intro}${lines.join("<br>")}`;
 }

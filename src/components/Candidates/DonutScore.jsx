@@ -4,7 +4,7 @@ import HoverBreakdownCard from "./HoverBreakdownCard";
 
 export default function DonutScore({ label, score, breakdown = {} }) {
     const size = 140;
-    const strokeWidth = 22;
+    const strokeWidth = 26;
     const [isHovered, setIsHovered] = useState(false);
     const [position, setPosition] = useState("center");
     const ref = useRef(null);
@@ -72,7 +72,7 @@ export default function DonutScore({ label, score, breakdown = {} }) {
     return (
         <div
             ref={ref}
-            className="relative flex flex-col items-center justify-center bg-white rounded-2xl shadow-md p-5 w-[180px] h-[220px]"
+            className="relative flex flex-col items-center justify-center bg-gradient-to-b from-white via-gray-50 to-gray-100 border border-gray-200 rounded-2xl shadow-lg p-5 w-[190px] h-[230px] hover:shadow-xl transition-shadow duration-300"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
@@ -101,7 +101,7 @@ export default function DonutScore({ label, score, breakdown = {} }) {
                 </div>
             </div>
 
-            <div className="mt-4 text-base font-semibold text-gray-600 text-center">
+            <div className="mt-3 text-sm font-semibold text-gray-700 text-center tracking-wide">
                 {label}
             </div>
 
