@@ -1,4 +1,3 @@
-// components/candidates/HoverBreakdownCard.jsx
 import React from "react";
 import {
     formatSkillMatch,
@@ -9,26 +8,27 @@ import {
 export default function HoverBreakdownCard({ breakdown }) {
     if (!breakdown || typeof breakdown !== "object") return null;
 
+    let title = "";
     let textSummary = "";
 
     if ("match_pct" in breakdown && "matched_skills" in breakdown) {
-        // skill_match_breakdown
+        title = "Skill Match Breakdown";
         textSummary = formatSkillMatch(breakdown);
     } else if ("structure" in breakdown || "grammar" in breakdown) {
-        // resume_quality_breakdown
+        title = "Resume Quality Breakdown";
         textSummary = formatResumeQuality(breakdown);
     } else if ("skill_match" in breakdown || "education_match" in breakdown) {
-        // score_breakdown
+        title = "Candidate Match Score Breakdown";
         textSummary = formatScoreBreakdown(breakdown);
     } else {
-        // fallback
+        title = "Breakdown";
         textSummary = "Breakdown data not available.";
     }
 
     return (
-        <div
-            className="bg-gray-800 text-white rounded-xl shadow-lg p-4 text-xs max-w-sm w-full animate-fade-in leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: textSummary }}
-        />
+        <div className="bg-gray-800 text-white rounded-xl shadow-lg p-4 text-xs w-full max-w-[320px] animate-fade-in leading-relaxed">
+            <div className="font-bold text-sm mb-1">{title}</div>
+            <div className="space-y-1" dangerouslySetInnerHTML={{ __html: textSummary }} />
+        </div>
     );
 }

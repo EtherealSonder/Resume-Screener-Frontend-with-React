@@ -19,11 +19,10 @@ export default function Sidebar() {
                 <h1 className="text-2xl font-bold mb-8 tracking-wide">LUPIQ</h1>
 
                 <nav className="flex flex-col gap-4 text-lg">
-                    {/* Home now points to /dashboard/statistics */}
                     <NavLinkItem to="/dashboard/statistics" icon={<FaHome />} label="Home" exact={true} />
                     <NavLinkItem to="/dashboard/candidates" icon={<FaUser />} label="Candidates" />
                     <NavLinkItem to="/dashboard/jobs" icon={<FaBriefcase />} label="Jobs" />
-                    <NavLinkItem to="/dashboard/asklupiq" icon={<FaRobot />} label={<em>AskLupiq</em>} />
+                    <NavLinkItem to="/dashboard/asklupiq" icon={<FaRobot />} label="AskLUPIQ" />
                 </nav>
             </div>
 
@@ -35,13 +34,20 @@ export default function Sidebar() {
                 )}
 
                 <NavLinkItem to="/dashboard/settings" icon={<FaCog />} label="Settings" />
-                <p className="text-xs text-gray-400 px-2">Development Build</p>
+                <p
+                    className="text-xs text-gray-400 px-2 cursor-help"
+                    title="Upcoming: AskLUPIQ : a NLP agent for our dashboard, more analytics, revamped UI/UX, lesser load times, automatic mail to candidates when jobs get expired or deleted, improved scoring system,AI powered Job Creation system and more."
+                >
+                    Beta Preview
+                </p>
             </div>
         </div>
     );
 }
 
 function NavLinkItem({ to, icon, label, exact = false }) {
+    const location = useLocation();
+
     return (
         <NavLink
             to={to}

@@ -32,10 +32,8 @@ export function formatSkillMatch(breakdown) {
     }
 
     result += `Matched ${matchCount} out of ${totalCount} required skills.`;
-
     return result;
 }
-
 
 export function formatResumeQuality(breakdown) {
     if (!breakdown || typeof breakdown !== "object") return "Resume quality breakdown not available.";
@@ -55,18 +53,16 @@ export function formatResumeQuality(breakdown) {
     let result = `<strong>Resume Quality Breakdown</strong><br><br>`;
 
     for (const [key, value] of Object.entries(breakdown)) {
-        if (key === "bullet_points") continue; // Skip bullet point display
-
+        if (key === "bullet_points") continue;
         if (!value || typeof value !== "object") continue;
 
         const label = metricLabels[key] || key.replace(/_/g, " ");
         const contribution = typeof value.contribution === "number" ? value.contribution : null;
 
-        // Custom explanations
         let explanation = value.explanation || "";
         if (key === "readability_grammar") {
-            const match = explanation.match(/Detected \d+ grammar\/spelling issues\./);
-            explanation = match ? match[0] : "Detected grammar/spelling issues.";
+            const match = explanation.match(/Detected \d+ (?:grammar\/spelling|spelling|grammar) issues/i);
+            explanation = match ? match[0] + "." : "Detected grammar/spelling issues.";
         }
         if (key === "section_headers") {
             const match = explanation.match(/Detected \d+ header/i);
@@ -133,7 +129,7 @@ export function formatScoreBreakdown(breakdown) {
         }
 
         if (contribution) {
-            line += ` <span class="inline-block ml-2 bg-blue-600 text-white text-[10px] font-semibold px-2 py-0.5 rounded">${contribution} pts</span>`;
+            line += ` <span class="inline-block ml-2 bg-blue-600 text-white text-[10px] font-semibold px-2 py-0.5 rounded">${contribution}</span>`;
         }
 
         lines.push(line);

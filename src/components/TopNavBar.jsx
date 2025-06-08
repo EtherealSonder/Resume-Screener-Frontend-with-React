@@ -98,11 +98,6 @@ export default function TopNavbar() {
                     )}
                 </button>
 
-                {/* Profile Initial */}
-                <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold">
-                    T
-                </div>
-
                 {/* 🔽 Notification Dropdown */}
                 {showDropdown && (
                     <div className="absolute right-0 top-16 bg-white border border-gray-200 shadow-xl rounded-lg w-64 p-4 z-[9999] text-sm text-gray-800">

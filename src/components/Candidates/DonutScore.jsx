@@ -53,7 +53,7 @@ export default function DonutScore({ label, score, breakdown = {} }) {
         return `rgb(${r}, ${g}, ${b})`;
     };
 
-    const color = getColor(safeScore ?? 0); // fallback to red for visual consistency
+    const color = getColor(safeScore ?? 0);
 
     useEffect(() => {
         let initial = "center";
@@ -72,7 +72,7 @@ export default function DonutScore({ label, score, breakdown = {} }) {
     return (
         <div
             ref={ref}
-            className="relative flex flex-col items-center justify-center bg-gradient-to-b from-white via-gray-50 to-gray-100 border border-gray-200 rounded-2xl shadow-lg p-5 w-[190px] h-[230px] hover:shadow-xl transition-shadow duration-300"
+            className="relative flex flex-col items-center justify-center bg-gradient-to-b from-white via-gray-50 to-gray-100 border border-gray-200 rounded-2xl shadow-md p-5 w-[190px] h-[230px] hover:shadow-lg transition-shadow duration-300"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
@@ -93,33 +93,26 @@ export default function DonutScore({ label, score, breakdown = {} }) {
                         <Cell key="rest" fill="#e5e7eb" />
                     </Pie>
                 </PieChart>
-
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <div className="text-4xl font-extrabold text-black leading-none">
-                        {displayScore}
-                    </div>
+                    <div className="text-4xl font-extrabold text-black leading-none">{displayScore}</div>
                 </div>
             </div>
-
             <div className="mt-3 text-sm font-semibold text-gray-700 text-center tracking-wide">
                 {label}
             </div>
 
-            {/* Hover Breakdown Card */}
-            <div
-                className={`absolute z-50 w-[250px] max-w-sm transition-opacity duration-300 ${isHovered ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-                    } ${position === "center"
-                        ? "top-[110%] left-1/2 -translate-x-1/2"
-                        : position === "left"
-                            ? "top-[30%] right-[calc(100%+12px)]"
-                            : "top-[30%] left-[calc(100%+12px)]"
-                    }`}
-            >
-                <div className="relative">
-                    <div className="absolute w-3 h-3 rotate-45 bg-gray-800 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[-1]" />
+            {isHovered && (
+                <div
+                    className={`absolute z-50 w-[320px] max-w-sm transition-opacity duration-300 ${position === "center"
+                            ? "top-[110%] left-1/2 -translate-x-1/2"
+                            : position === "left"
+                                ? "top-[20%] right-[calc(100%+12px)]"
+                                : "top-[20%] left-[calc(100%+12px)]"
+                        }`}
+                >
                     <HoverBreakdownCard breakdown={breakdown} />
                 </div>
-            </div>
+            )}
         </div>
     );
 }

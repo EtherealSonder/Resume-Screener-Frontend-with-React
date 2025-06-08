@@ -60,4 +60,28 @@ export const getRadarData = (clientId, type, jobTitles) =>
         params: { client_id: clientId, type, job_titles: jobTitles },
     });
 
+export const updateUser = (payload) =>
+    api.post("/update_user", payload);
+
+export const verifyPassword = (payload) =>
+    api.post("/verify_password", payload);
+
+export const updatePassword = (payload) =>
+    api.post("/update_password", payload);
+
+export const deleteUser = (id) => {
+    return api.post("/delete_user", { id });
+};
+
+export const getClientPreferences = (clientId) =>
+    api.get(`/client_preferences`, { params: { client_id: clientId } });
+
+// Update evaluation prompt and weights
+export const updateClientPreferences = (clientId, customPrompt, weights) =>
+    api.post(`/client_preferences/update`, {
+        client_id: clientId,
+        custom_eval_prompt: customPrompt,
+        weights: weights
+    });
+
 export default api;
