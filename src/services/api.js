@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://localhost:5000", // update if using ngrok or different host
+    baseURL: "https://resume-webhook.onrender.com",
 });
 
 // Auth
