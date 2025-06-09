@@ -3,7 +3,7 @@ import api from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
 import ModalOverlay from "../../components/ModalOverlay";
 import ToastPortal from "../../components/ToastPortal";
-import LoadingSpinner from "../../components/candidates/LoadingSpinner";
+import LoadingSpinner from "../../components/Candidates/LoadingSpinner";
 import { FaArrowDown, FaArrowUp, FaFileAlt, FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
