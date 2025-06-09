@@ -2,9 +2,11 @@
 import TopNavLandingPage from "./landingpage/TopNavLandingPage";
 import HeroTextLandingPage from "./landingpage/HeroTextLandingPage";
 import CarouselSection from "./landingpage/CarouselSection";
+import WhyLUPIQ from "./landingpage/WhyLUPIQ";
 
 export default function LandingPage() {
     const heroRef = useRef(null);
+    const whyRef = useRef(null);
     const carouselRef = useRef(null);
     const [activeSection, setActiveSection] = useState(0);
 
@@ -14,53 +16,58 @@ export default function LandingPage() {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
                         const sectionId = entry.target.id;
-                        setActiveSection(sectionId === "hero" ? 0 : 1);
+                        if (sectionId === "hero") setActiveSection(0);
+                        else if (sectionId === "why-lupiq") setActiveSection(1);
+                        else if (sectionId === "carousel") setActiveSection(2);
                     }
                 });
             },
             { threshold: 0.5 }
         );
 
-        if (heroRef.current) observer.observe(heroRef.current);
-        if (carouselRef.current) observer.observe(carouselRef.current);
+        [heroRef, whyRef, carouselRef].forEach((ref) => {
+            if (ref.current) observer.observe(ref.current);
+        });
 
         return () => {
-            if (heroRef.current) observer.unobserve(heroRef.current);
-            if (carouselRef.current) observer.unobserve(carouselRef.current);
+            [heroRef, whyRef, carouselRef].forEach((ref) => {
+                if (ref.current) observer.unobserve(ref.current);
+            });
         };
     }, []);
 
     return (
-        <div className="w-full h-screen bg-[#1f2937] text-white font-sans overflow-x-hidden overflow-y-auto snap-y snap-mandatory scroll-smooth">
+        <div
+            className="relative w-full h-screen text-white font-sans overflow-x-hidden overflow-y-auto snap-y snap-mandatory scroll-smooth"
+            style={{
+                background: `radial-gradient(600px circle at 30% 20%, #a855f733, transparent 60%), #1f2937`,
+            }}
+        >
             <TopNavLandingPage />
-            <section
-                id="hero"
-                ref={heroRef}
-                className="snap-start snap-always w-full h-screen pt-24 flex flex-col justify-center items-center"
-            >
+
+            <section id="hero" ref={heroRef} className="snap-start snap-always w-full min-h-screen pt-[96px]">
                 <HeroTextLandingPage />
             </section>
-            <section
-                id="carousel"
-                ref={carouselRef}
-                className="snap-start snap-always w-full h-screen pt-24"
-            >
+
+            <section id="why-lupiq" ref={whyRef} className="snap-start snap-always w-full min-h-screen pt-[96px]">
+                <WhyLUPIQ />
+            </section>
+
+            <section id="carousel" ref={carouselRef} className="snap-start snap-always w-full min-h-screen pt-[96px]">
                 <CarouselSection />
             </section>
 
-            {/* Dot Navigation */}
             <div className="fixed top-1/2 right-8 transform -translate-y-1/2 flex flex-col space-y-3 z-50">
-                {[0, 1].map((i) => (
+                {[0, 1, 2].map((i) => (
                     <button
                         key={i}
-                        onClick={() =>
-                            document
-                                .getElementById(i === 0 ? "hero" : "carousel")
-                                ?.scrollIntoView({ behavior: "smooth" })
-                        }
+                        onClick={() => {
+                            const id = i === 0 ? "hero" : i === 1 ? "why-lupiq" : "carousel";
+                            document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+                        }}
                         className={`w-3 h-3 rounded-full transition-all duration-300 ${activeSection === i
-                                ? "bg-white scale-125 shadow-md animate-pulse"
-                                : "bg-gray-500 opacity-60"
+                            ? "bg-white scale-125 shadow-md animate-pulse"
+                            : "bg-gray-500 opacity-60"
                             }`}
                     />
                 ))}

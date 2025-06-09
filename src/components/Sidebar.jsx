@@ -14,11 +14,16 @@ export default function Sidebar() {
     const location = useLocation();
 
     return (
-        <div className="w-64 h-full bg-gray-800 text-white shadow-xl p-6 flex flex-col justify-between">
+        <div
+            className="w-64 h-full text-white shadow-xl p-6 flex flex-col justify-between"
+            style={{
+                background: `radial-gradient(600px circle at 30% 20%, #a855f733, transparent 60%), #1f2937`,
+            }}
+        >
             <div>
-                <h1 className="text-2xl font-bold mb-8 tracking-wide">LUPIQ</h1>
+                <h1 className="text-2xl font-bold mb-8 tracking-wide text-white drop-shadow-md">LUPIQ</h1>
 
-                <nav className="flex flex-col gap-4 text-lg">
+                <nav className="flex flex-col gap-3 text-base">
                     <NavLinkItem to="/dashboard/statistics" icon={<FaHome />} label="Home" exact={true} />
                     <NavLinkItem to="/dashboard/candidates" icon={<FaUser />} label="Candidates" />
                     <NavLinkItem to="/dashboard/jobs" icon={<FaBriefcase />} label="Jobs" />
@@ -36,7 +41,7 @@ export default function Sidebar() {
                 <NavLinkItem to="/dashboard/settings" icon={<FaCog />} label="Settings" />
                 <p
                     className="text-xs text-gray-400 px-2 cursor-help"
-                    title="Upcoming: AskLUPIQ : a NLP agent for our dashboard, more analytics, revamped UI/UX, lesser load times, automatic mail to candidates when jobs get expired or deleted, improved scoring system,AI powered Job Creation system and more."
+                    title="Upcoming: AskLUPIQ : a NLP agent for our dashboard, more analytics, revamped UI/UX, lesser load times, automatic mail to candidates when jobs get expired or deleted, improved scoring system, AI powered Job Creation system and more."
                 >
                     Beta Preview
                 </p>
@@ -53,8 +58,8 @@ function NavLinkItem({ to, icon, label, exact = false }) {
             to={to}
             className={({ isActive }) =>
                 `flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-200 ${(exact ? location.pathname === to : isActive)
-                    ? "bg-gray-700 text-white font-semibold"
-                    : "hover:bg-gray-700 text-white"
+                    ? "bg-white/10 text-white font-semibold ring-1 ring-purple-500/30"
+                    : "hover:bg-white/5 hover:ring-1 hover:ring-white/10 text-white"
                 }`
             }
         >

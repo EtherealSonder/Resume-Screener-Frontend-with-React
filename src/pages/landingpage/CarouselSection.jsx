@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -56,33 +56,41 @@ export default function CarouselSection() {
         enter: (direction) => ({
             x: direction > 0 ? 100 : -100,
             opacity: 0,
+            scale: 0.96,
             position: "absolute",
         }),
         center: {
             x: 0,
             opacity: 1,
+            scale: 1,
             position: "relative",
             transition: {
-                x: { type: "spring", stiffness: 300, damping: 30 },
-                opacity: { duration: 0.3 },
+                type: "tween",
+                ease: "easeInOut",
+                duration: 0.2,
             },
         },
         exit: (direction) => ({
             x: direction < 0 ? 100 : -100,
             opacity: 0,
+            scale: 0.96,
             position: "absolute",
-            transition: { duration: 0.3 },
+            transition: {
+                type: "tween",
+                ease: "easeInOut",
+                duration: 0.2,
+            },
         }),
     };
 
     const renderSideCard = (item, position) => {
-        const baseStyle =
-            "absolute transition-all duration-500 ease-in-out flex flex-col items-center justify-center rounded-3xl cursor-pointer";
-
-        const styles = {
-            left: "left-[5%] top-1/2 -translate-y-1/2 w-72 h-[65vh] opacity-30 scale-90 blur-md bg-white/10 border border-white/10 backdrop-blur-lg",
-            right: "right-[5%] top-1/2 -translate-y-1/2 w-72 h-[65vh] opacity-30 scale-90 blur-md bg-white/10 border border-white/10 backdrop-blur-lg",
-        };
+        const style = `
+            absolute ${position === "left" ? "left-[2%]" : "right-[2%]"}
+            top-1/2 -translate-y-1/2 w-[520px] h-[75vh]
+            bg-white/5 backdrop-blur-md border border-white/10
+            rounded-xl shadow-md scale-[.85] opacity-20 z-0
+            transition-all duration-200 ease-in-out
+        `;
 
         return (
             <div
@@ -91,7 +99,7 @@ export default function CarouselSection() {
                     if (position === "left") prev();
                     if (position === "right") next();
                 }}
-                className={`${baseStyle} ${styles[position]}`}
+                className={style}
             >
                 <div className="w-full h-full flex items-center justify-center px-6 py-6">
                     <img src={item.src} alt={item.alt} className="w-full h-[65%] object-contain" />
@@ -101,7 +109,7 @@ export default function CarouselSection() {
     };
 
     return (
-        <section className="w-full h-screen flex items-center justify-center bg-[#1f2937] snap-start">
+        <section className="w-full min-h-screen flex items-center justify-center snap-start">
             <div className="relative w-full max-w-[1440px] flex items-center justify-center mt-[-48px]">
                 {renderSideCard(carouselItems[prevIndex], "left")}
 
@@ -113,27 +121,28 @@ export default function CarouselSection() {
                         initial="enter"
                         animate="center"
                         exit="exit"
-                        className="z-20 w-[600px] h-[70vh] max-h-[600px] flex flex-col justify-center items-center bg-gradient-to-b from-[#f4f5f7] to-[#e8eaee] text-[#1f2937] border border-[#dcdfe3] shadow-[0_10px_60px_rgba(0,0,0,0.25)] rounded-3xl px-8 py-6"
+                        className="z-20 w-[860px] h-[80vh] flex flex-col justify-center items-center bg-white/10 text-white border border-white/10 shadow-2xl rounded-2xl px-10 py-8 backdrop-blur-lg hover:ring-2 hover:ring-purple-500/30 transition-all duration-200"
                     >
                         <img
                             src={carouselItems[currentIndex].src}
                             alt={carouselItems[currentIndex].alt}
                             className="w-full h-[65%] object-contain"
                         />
-                        <p className="text-xl font-semibold text-center leading-snug mt-6">
+                        <p className="text-xl font-semibold text-center leading-snug mt-6 text-white">
                             {carouselItems[currentIndex].tagline}
                         </p>
 
-                        <div className="absolute top-1/2 w-full px-4 flex justify-between items-center -translate-y-1/2 z-10">
+                        {/* Navigation Arrows */}
+                        <div className="absolute top-1/2 w-full px-4 flex justify-between items-center -translate-y-1/2 z-30">
                             <button
                                 onClick={prev}
-                                className="bg-black/30 hover:bg-white hover:text-black text-white p-2 rounded-full"
+                                className="bg-white/10 text-white rounded-full p-2 shadow-lg hover:bg-white/20 transition"
                             >
                                 <ChevronLeft size={22} />
                             </button>
                             <button
                                 onClick={next}
-                                className="bg-black/30 hover:bg-white hover:text-black text-white p-2 rounded-full"
+                                className="bg-white/10 text-white rounded-full p-2 shadow-lg hover:bg-white/20 transition"
                             >
                                 <ChevronRight size={22} />
                             </button>
