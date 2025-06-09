@@ -2,7 +2,7 @@ import { useState } from "react";
 import { loginUser } from "../services/api";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import LoadingSpinner from "../components/candidates/LoadingSpinner";
+import LoadingSpinner from "../components/Candidates/LoadingSpinner";
 
 export default function LoginPage() {
     const [form, setForm] = useState({ email: "", password: "", remember: false });
