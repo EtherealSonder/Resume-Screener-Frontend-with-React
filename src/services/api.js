@@ -3,7 +3,7 @@ import BASE_URL from "../baseURL";
 
 const api = axios.create({
     baseURL: BASE_URL,
-    withCredentials: true, // needed for sessions or secure cookies
+    withCredentials: true,
 });
 
 // Auth
