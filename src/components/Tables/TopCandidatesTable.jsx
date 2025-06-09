@@ -1,7 +1,7 @@
 ﻿import { useState, useEffect, useRef } from "react";
 import ExportButtons from "../ExportButtons";
-import LoadingSpinner from "../candidates/LoadingSpinner";
-import CandidateDetail from "../candidates/CandidateDetail";
+import LoadingSpinner from "../Candidates/LoadingSpinner";
+import CandidateDetail from "../Candidates/CandidateDetail";
 
 function getScoreColor(score) {
     if (score >= 70) return "bg-green-200 text-green-800";
