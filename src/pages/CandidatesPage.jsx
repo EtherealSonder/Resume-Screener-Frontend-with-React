@@ -1,10 +1,10 @@
 // pages/CandidatesPage.jsx
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import CandidateCard from "../components/candidates/CandidateCard";
-import CandidateDetail from "../components/candidates/CandidateDetail";
-import LoadingSpinner from "../components/candidates/LoadingSpinner";
-import ControlsBar from "../components/candidates/ControlsBar";
+import CandidateCard from "../components/Candidates/CandidateCard";
+import CandidateDetail from "../components/Candidates/CandidateDetail";
+import LoadingSpinner from "../components/Candidates/LoadingSpinner";
+import ControlsBar from "../components/Candidates/ControlsBar";
 
 export default function CandidatesPage() {
     const { user } = useAuth();
