@@ -1,7 +1,9 @@
 import axios from "axios";
+import BASE_URL from "../baseURL";
 
 const api = axios.create({
-    baseURL: "https://resume-webhook.onrender.com",
+    baseURL: BASE_URL,
+    withCredentials: true, // needed for sessions or secure cookies
 });
 
 // Auth
