@@ -136,9 +136,10 @@ export default function JobsMy({ selectedJob, setSelectedJob }) {
                     {sortedJobs.map((job) => (
                         <div
                             key={job.id}
-                            onClick={() => setSelectedJob(job)}
-                            className={`cursor-pointer p-5 rounded-2xl shadow-sm transition flex flex-col gap-2 border ${isExpired(job) ? "border-red-500 bg-red-50" : "border-graylupa-border bg-graylupa-surface hover:bg-gray-100"}`}
+                            onClick={() => window.open(`/apply/${job.id}`, "_blank")}
+                            className={`cursor-pointer p-5 rounded-2xl shadow-sm transition flex flex-col gap-2 border ${isExpired(job) ? "border-red-500 bg-red-50" : "border-graylupa-border bg-graylupa-surface hover:bg-gray-100" }`}
                         >
+
                             <div className="flex items-center gap-3">
                                 <FaFileAlt className="text-xl text-gray-500" />
                                 <div>

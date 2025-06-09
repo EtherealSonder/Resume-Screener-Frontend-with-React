@@ -1,6 +1,9 @@
 ﻿import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 export default function HeroTextLandingPage() {
+    const navigate = useNavigate();
+
     return (
         <section className="h-screen w-full flex flex-col justify-center items-center text-center px-6 lg:px-48 relative overflow-hidden">
             {/* 🧠 Heading */}
@@ -10,7 +13,7 @@ export default function HeroTextLandingPage() {
                 transition={{ duration: 0.6 }}
                 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight tracking-[-0.5px]"
             >
-                Your intelligent hiring co–pilot.
+                Your intelligent hiring copilot.
             </motion.h1>
 
             {/* 📄 Subtext */}
@@ -37,7 +40,7 @@ export default function HeroTextLandingPage() {
                 className="flex gap-4 flex-wrap justify-center"
             >
                 <button
-                    onClick={() => window.location.href = "/login"}
+                    onClick={() => navigate("/login")}
                     className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-full shadow-lg hover:brightness-110 hover:scale-105 transition-all duration-150 ease-out focus:ring-2 focus:ring-pink-500 focus:outline-none"
                 >
                     Get Started

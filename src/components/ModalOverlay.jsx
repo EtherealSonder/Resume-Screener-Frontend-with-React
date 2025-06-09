@@ -206,13 +206,12 @@ export default function ModalOverlay({ job, onClose, refreshJobs }) {
                                         <p className="whitespace-pre-wrap text-gray-800">{description}</p>
                                     </div>
                                     <a
-                                        href={`${frontendUrl}/apply/${job.id}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 text-sm bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium transition mt-4"
-                                    >
-                                        <FaExternalLinkAlt />
-                                        View Application Form
+                                       href={`/apply/${job.id}`}
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       className="inline-flex items-center gap-2 text-sm bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium transition mt-4">
+                                       <FaExternalLinkAlt />
+                                       View Application Form
                                     </a>
                                 </>
                             )}
