@@ -2,7 +2,7 @@ import { useState } from "react";
 import { signupUser } from "../services/api";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import LoadingSpinner from "../components/candidates/LoadingSpinner";
+import LoadingSpinner from "../components/Candidates/LoadingSpinner";
 
 export default function SignupPage() {
     const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
