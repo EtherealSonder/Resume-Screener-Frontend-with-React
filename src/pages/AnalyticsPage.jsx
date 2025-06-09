@@ -12,7 +12,7 @@ import ScoreQualityDistributions from "../components/ScoreQualityDistributions";
 import SkillInsights from "../components/charts/SkillInsights";
 import { useAuth } from "../context/AuthContext";
 import api from "../services/api";
-import LoadingSpinner from "../components/candidates/LoadingSpinner";
+import LoadingSpinner from "../components/Candidates/LoadingSpinner";
 import MiniMetricCard from "../components/MiniMetricCard";
 
 export default function AnalyticsPage() {
