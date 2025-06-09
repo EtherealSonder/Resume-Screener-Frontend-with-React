@@ -5,7 +5,7 @@ import CandidateCard from "../components/Candidates/CandidateCard";
 import CandidateDetail from "../components/Candidates/CandidateDetail";
 import LoadingSpinner from "../components/Candidates/LoadingSpinner";
 import ControlsBar from "../components/Candidates/ControlsBar";
-
+import baseURL from "../src/api/baseURL";
 export default function CandidatesPage() {
     const { user } = useAuth();
     const [candidates, setCandidates] = useState([]);
@@ -19,7 +19,7 @@ export default function CandidatesPage() {
     const [sortOrder, setSortOrder] = useState("desc");
 
     useEffect(() => {
-        fetch(`http://localhost:5000/candidates?client_id=${user.id}`)
+        fetch(`${baseURL}/candidates?client_id=${user.id}`)
             .then((res) => res.json())
             .then((data) => {
                 setCandidates(data);
