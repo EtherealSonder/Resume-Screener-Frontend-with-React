@@ -1,7 +1,7 @@
 ﻿import { useState, useEffect, useRef } from "react";
 import BarChartCard from "../components/charts/BarChartCard";
 import PieChartCard from "../components/charts/PieChartCard";
-import LoadingSpinner from "../components/candidates/LoadingSpinner";
+import LoadingSpinner from "../components/Candidates/LoadingSpinner";
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import ExportButtons from "../components/ExportButtons";

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import LoadingSpinner from "../candidates/LoadingSpinner";
+import LoadingSpinner from "../Candidates/LoadingSpinner";
 
 export default function BottomCandidatesTable({ clientId, onSelectCandidate }) {
     const [candidates, setCandidates] = useState([]);

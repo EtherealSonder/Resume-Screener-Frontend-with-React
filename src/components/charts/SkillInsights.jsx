@@ -1,5 +1,5 @@
 ﻿import { useEffect, useState, useRef } from "react";
-import LoadingSpinner from "../candidates/LoadingSpinner";
+import LoadingSpinner from "../Candidates/LoadingSpinner";
 import { useAuth } from "../../context/AuthContext";
 import { getSkillBubbleData, getRadarData, getCandidates } from "../../services/api";
 import SkillWordCloud from "../SkillWordCloudCustom";
