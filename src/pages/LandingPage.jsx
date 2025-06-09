@@ -1,33 +1,69 @@
-import { useNavigate } from "react-router-dom";
+﻿import { useEffect, useRef, useState } from "react";
+import TopNavLandingPage from "./landingpage/TopNavLandingPage";
+import HeroTextLandingPage from "./landingpage/HeroTextLandingPage";
+import CarouselSection from "./landingpage/CarouselSection";
 
 export default function LandingPage() {
-    const navigate = useNavigate();
+    const heroRef = useRef(null);
+    const carouselRef = useRef(null);
+    const [activeSection, setActiveSection] = useState(0);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const sectionId = entry.target.id;
+                        setActiveSection(sectionId === "hero" ? 0 : 1);
+                    }
+                });
+            },
+            { threshold: 0.5 }
+        );
+
+        if (heroRef.current) observer.observe(heroRef.current);
+        if (carouselRef.current) observer.observe(carouselRef.current);
+
+        return () => {
+            if (heroRef.current) observer.unobserve(heroRef.current);
+            if (carouselRef.current) observer.unobserve(carouselRef.current);
+        };
+    }, []);
 
     return (
-        <div
-            className="min-h-screen w-full flex items-center justify-center bg-cover bg-center font-sans overflow-hidden"
-            style={{
-                backgroundImage: "url('/src/assets/bg.jpg')",
-            }}
-        >
-            <div className="bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl rounded-3xl w-[360px] text-center p-8 animate-fadeIn transition duration-500">
-                <h1 className="text-2xl font-bold mb-6 text-white drop-shadow-md">
-                    Resume Screener
-                </h1>
+        <div className="w-full h-screen bg-[#1f2937] text-white font-sans overflow-x-hidden overflow-y-auto snap-y snap-mandatory scroll-smooth">
+            <TopNavLandingPage />
+            <section
+                id="hero"
+                ref={heroRef}
+                className="snap-start snap-always w-full h-screen pt-24 flex flex-col justify-center items-center"
+            >
+                <HeroTextLandingPage />
+            </section>
+            <section
+                id="carousel"
+                ref={carouselRef}
+                className="snap-start snap-always w-full h-screen pt-24"
+            >
+                <CarouselSection />
+            </section>
 
-                <button
-                    onClick={() => navigate("/login")}
-                    className="w-full mb-4 py-2 rounded-full bg-blue-500 text-white font-medium hover:bg-blue-600 transform hover:scale-105 transition duration-200"
-                >
-                    Login
-                </button>
-
-                <button
-                    onClick={() => navigate("/signup")}
-                    className="w-full py-2 rounded-full bg-green-500 text-white font-medium hover:bg-green-600 transform hover:scale-105 transition duration-200"
-                >
-                    Sign Up
-                </button>
+            {/* Dot Navigation */}
+            <div className="fixed top-1/2 right-8 transform -translate-y-1/2 flex flex-col space-y-3 z-50">
+                {[0, 1].map((i) => (
+                    <button
+                        key={i}
+                        onClick={() =>
+                            document
+                                .getElementById(i === 0 ? "hero" : "carousel")
+                                ?.scrollIntoView({ behavior: "smooth" })
+                        }
+                        className={`w-3 h-3 rounded-full transition-all duration-300 ${activeSection === i
+                                ? "bg-white scale-125 shadow-md animate-pulse"
+                                : "bg-gray-500 opacity-60"
+                            }`}
+                    />
+                ))}
             </div>
         </div>
     );
