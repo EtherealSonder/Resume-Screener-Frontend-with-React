@@ -5,7 +5,7 @@ import CandidateCard from "../components/Candidates/CandidateCard";
 import CandidateDetail from "../components/Candidates/CandidateDetail";
 import LoadingSpinner from "../components/Candidates/LoadingSpinner";
 import ControlsBar from "../components/Candidates/ControlsBar";
-import baseURL from "../src/api/baseURL";
+import baseURL from "../src/baseURL";
 export default function CandidatesPage() {
     const { user } = useAuth();
     const [candidates, setCandidates] = useState([]);
