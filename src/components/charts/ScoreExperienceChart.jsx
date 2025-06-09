@@ -3,7 +3,7 @@ import {
     ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip,
     ResponsiveContainer, Legend, Line
 } from "recharts";
-import LoadingSpinner from "../candidates/LoadingSpinner";
+import LoadingSpinner from "../Candidates/LoadingSpinner";
 import ExportButtons from "../ExportButtons";
 
 const COLORS = [
